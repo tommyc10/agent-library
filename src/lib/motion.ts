@@ -3,9 +3,10 @@ import { flushSync } from 'react-dom';
 
 export const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** Run a state change as a view transition, so named elements move to where they end up. */
+/** Run a state change as a view transition, so named elements move to where they end up.
+ * With reduced motion it still runs, so the change cross-fades; callers name nothing to move. */
 export function transition(update: () => void, done?: () => void) {
-  if (!document.startViewTransition || reducedMotion()) {
+  if (!document.startViewTransition) {
     update();
     done?.();
     return;

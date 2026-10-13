@@ -1203,6 +1203,33 @@
   .lib-pv * {
     animation: none !important;
   }
+  /* Arrivals fade in place, all at once. */
+  @keyframes lib-arrive {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes lib-roll {
+    from {
+      opacity: 0;
+    }
+  }
+  .lib-tile,
+  .lib-panel-body > * {
+    animation-delay: 0ms !important;
+  }
+  /* Presses and swaps change colour and opacity, not size or position. */
+  .lib-nav-item:active,
+  .lib-tile:active .lib-draw {
+    transform: none;
+  }
+  .lib-copy-icons svg {
+    transform: none !important;
+    filter: none !important;
+  }
+  .lib-nav-pill {
+    transition: none;
+  }
 }
 
 /* Less transparency, or more contrast: the glass surfaces turn solid. */

@@ -49,9 +49,12 @@ export function App() {
   // The order the arrow keys walk in: top to bottom as drawn.
   const order = searching ? visible.map((e) => e.id) : sections.flatMap((s) => s.items.map((e) => e.id));
 
+  // With reduced motion nothing is named, so a view transition only cross-fades the page.
+  const name = (which: 'all' | string) => setNamed(reducedMotion() ? null : which);
+
   const refilter = (update: () => void) => {
     typing.now = false;
-    flushSync(() => setNamed('all'));
+    flushSync(() => name('all'));
     setActive(null);
     transition(update, () => setNamed(null));
   };
@@ -60,14 +63,14 @@ export function App() {
     history.pushState(null, '', `#/${id}`);
     if (open) return setOpen(id);
     opener.current = document.activeElement as HTMLElement | null;
-    flushSync(() => setNamed(id));
+    flushSync(() => name(id));
     transition(() => setOpen(id));
   };
 
   const close = () => {
     if (!open) return;
     history.pushState(null, '', location.pathname + location.search);
-    flushSync(() => setNamed(open));
+    flushSync(() => name(open));
     transition(
       () => setOpen(null),
       () => setNamed(null),

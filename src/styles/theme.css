@@ -190,12 +190,10 @@ p {
   object-position: top left;
 }
 
+/* Reduced motion keeps the feedback and drops the travel: things fade, nothing slides,
+ * grows or bounces. The parts that move set their still version in app.css. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 1ms !important;
-    animation-delay: 0ms !important;
-    transition-duration: 1ms !important;
+  :root {
+    --press: 1;
   }
 }
