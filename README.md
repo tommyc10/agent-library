@@ -29,6 +29,10 @@ Quote any frontmatter value that contains a colon.
 
 - `vite.config.ts` reads `content/` into one module (`virtual:library`) at build time.
 - `src/lib/library.ts` holds the types and the search.
-- `src/styles/theme.css` holds every colour, and the view-transition rules that move rows
-  when a filter changes and grow a tile into the detail panel.
+- `src/styles/theme.css` holds every colour, and the cross-fade used when the theme changes.
+- `src/lib/motion.ts` holds the springs, in Apple's terms (damping and response). Tiles move to
+  their new places on them when a filter changes (Motion's `layout`), and
+  `src/lib/panel-motion.ts` grows a tile into the detail panel on them. Both can be
+  interrupted and reversed half way. On narrow screens the panel is a sheet you drag down
+  by its header to put away.
 - `src/styles/previews.css` holds the six small drawings skill tiles can use.

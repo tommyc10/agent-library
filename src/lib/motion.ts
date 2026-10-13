@@ -3,9 +3,26 @@ import { flushSync } from 'react-dom';
 
 export const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** Run a state change as a view transition, so named elements move to where they end up. */
+/** A spring in Apple's two numbers: damping (1 settles without bouncing, lower bounces)
+ * and response (roughly how many seconds it takes to get there). */
+export const spring = (damping: number, response: number) => ({
+  type: 'spring' as const,
+  stiffness: ((2 * Math.PI) / response) ** 2,
+  damping: (4 * Math.PI * damping) / response,
+  mass: 1,
+});
+
+/** How far a flick carries past the point it was let go, in px, like a scroll coasting to a stop. */
+export const project = (velocity: number, deceleration = 0.998) => ((velocity / 1000) * deceleration) / (1 - deceleration);
+
+/** Past an edge, follow the pointer less the further it goes, instead of stopping dead. */
+export const rubberband = (overshoot: number, dimension: number, constant = 0.55) =>
+  (overshoot * dimension * constant) / (dimension + constant * Math.abs(overshoot));
+
+/** Change the whole page at once and cross-fade it. Only the theme switch uses this: it has
+ * no motion to interrupt, and colours can't be faded one by one. */
 export function transition(update: () => void, done?: () => void) {
-  if (!document.startViewTransition || reducedMotion()) {
+  if (!document.startViewTransition) {
     update();
     done?.();
     return;

@@ -1,7 +1,7 @@
 import { LayoutGrid, Moon, Search, Sun, X } from 'lucide-react';
+import { AnimatePresence, motion, MotionConfig, type MotionStyle } from 'motion/react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { flushSync } from 'react-dom';
-import { Tile, TYPE_ICON } from './components/Items';
+import { leave, reflow, Tile, TYPE_ICON } from './components/Items';
 import { Panel } from './components/Panel';
 import { Roll } from './components/Roll';
 import { collections, displayName, entries, examples, getEntry, plural, search, TYPES, type Entry, type EntryType } from './lib/library';
@@ -19,20 +19,27 @@ const isTyping = (target: EventTarget | null) =>
 
 const count = (list: Entry[], type: EntryType) => list.filter((e) => e.type === type).length;
 
+/** How many panel entries this tab has stacked on the history entry it opened from. */
+const depth = (): number => history.state?.depth ?? 0;
+
 export function App() {
   const [type, setType] = useState<TypeFilter>('all');
   const [collection, setCollection] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState<string | null>(readHash);
-  // Which items are their own layer in the next view transition: all of them (a filter
-  // change, so they slide to their new places) or one (it grows into the panel).
-  const [named, setNamed] = useState<'all' | string | null>(null);
+  // What the panel shows. It outlives `open` while the panel animates away, so the page
+  // is live again the moment closing starts, not when the motion ends.
+  const [shown, setShown] = useState(open);
+  // The panel was open when the page loaded, from a link: it starts in place.
+  const linked = useRef(open !== null);
   const [active, setActive] = useState<string | null>(null);
   const [theme, setTheme] = useState(() => localStorage.getItem('library-theme') ?? 'dark');
   const searchRef = useRef<HTMLInputElement>(null);
   // What had focus when the panel opened. The page behind goes inert, which drops focus,
   // so it has to be noted before that and handed back once the page is live again.
   const opener = useRef<HTMLElement | null>(null);
+  // Set while `close` walks back through history, so the popstate it causes closes the panel.
+  const leaving = useRef(false);
 
   const searching = query.trim().length > 0;
   const matched = useMemo(() => search(query, entries), [query]);
@@ -49,29 +56,39 @@ export function App() {
   // The order the arrow keys walk in: top to bottom as drawn.
   const order = searching ? visible.map((e) => e.id) : sections.flatMap((s) => s.items.map((e) => e.id));
 
+  // A filter change from a click, as opposed to typing: the results move to their places.
   const refilter = (update: () => void) => {
     typing.now = false;
-    flushSync(() => setNamed('all'));
     setActive(null);
-    transition(update, () => setNamed(null));
+    update();
   };
+
+  const show = (id: string) => {
+    if (!open) opener.current = document.activeElement as HTMLElement | null;
+    linked.current = false;
+    setOpen(id);
+    setShown(id);
+  };
+
+  const hide = () => setOpen(null);
 
   const openEntry = (id: string) => {
-    history.pushState(null, '', `#/${id}`);
-    if (open) return setOpen(id);
-    opener.current = document.activeElement as HTMLElement | null;
-    flushSync(() => setNamed(id));
-    transition(() => setOpen(id));
+    history.pushState({ depth: depth() + 1 }, '', `#/${id}`);
+    show(id);
   };
 
+  // The close button, Escape and Back all leave the same way: back to the history entry
+  // the panel was opened from, so Back afterwards never opens it again.
   const close = () => {
     if (!open) return;
-    history.pushState(null, '', location.pathname + location.search);
-    flushSync(() => setNamed(open));
-    transition(
-      () => setOpen(null),
-      () => setNamed(null),
-    );
+    if (depth() > 0) {
+      leaving.current = true;
+      history.go(-depth());
+    } else {
+      // Arrived here from a link, with no list behind it: this entry becomes the list.
+      history.replaceState(null, '', location.pathname + location.search);
+      hide();
+    }
   };
 
   const toggleTheme = () => {
@@ -85,10 +102,20 @@ export function App() {
   }, [theme]);
 
   useEffect(() => {
-    const onPop = () => setOpen(readHash());
+    const onPop = () => {
+      const id = readHash();
+      if (leaving.current) {
+        leaving.current = false;
+        if (id) history.replaceState(null, '', location.pathname + location.search);
+        return hide();
+      }
+      if (id === open) return;
+      if (id) show(id);
+      else hide();
+    };
     addEventListener('popstate', onPop);
     return () => removeEventListener('popstate', onPop);
-  }, []);
+  });
 
   useEffect(() => {
     document.documentElement.toggleAttribute('data-locked', open !== null);
@@ -152,7 +179,6 @@ export function App() {
   const item = (entry: Entry, index: number) => ({
     entry,
     index,
-    named: open !== entry.id && (named === 'all' || named === entry.id),
     active: active === entry.id,
     onOpen: openEntry,
   });
@@ -161,9 +187,11 @@ export function App() {
     { id: 'all', label: 'Everything', icon: LayoutGrid, total: forTypes.length },
     ...TYPES.map((t) => ({ id: t.id, label: t.plural, icon: TYPE_ICON[t.id], total: count(forTypes, t.id) })),
   ];
-  const openEntryData = getEntry(open);
+  const shownEntry = getEntry(shown);
 
   return (
+    // Under reduced motion, Motion keeps fades and drops movement.
+    <MotionConfig reducedMotion="user">
     <div className="lib">
       <aside className="lib-rail" inert={open !== null}>
         <div className="lib-brand">
@@ -264,8 +292,9 @@ export function App() {
         </header>
 
         <div className="lib-body">
+          <AnimatePresence mode="popLayout" initial={false} custom={typing.now}>
           {visible.length === 0 && (
-            <div className="lib-empty">
+            <motion.div key="empty" className="lib-empty" layout="position" transition={reflow()} exit="out" variants={leave}>
               <p>Nothing here matches that.</p>
               <button
                 type="button"
@@ -280,11 +309,11 @@ export function App() {
               >
                 Show everything
               </button>
-            </div>
+            </motion.div>
           )}
 
           {searching && visible.length > 0 && (
-            <section className="lib-section">
+            <motion.section key="matches" className="lib-section" layout="position" transition={reflow()} exit="out" variants={leave}>
               <header className="lib-section-head">
                 <h2>Best matches</h2>
                 <span className="lib-section-count">
@@ -292,16 +321,26 @@ export function App() {
                 </span>
               </header>
               <div className="lib-tiles">
-                {visible.map((entry, i) => (
-                  <Tile key={entry.id} {...item(entry, i)} />
-                ))}
+                <AnimatePresence mode="popLayout" initial={false} custom={typing.now}>
+                  {visible.map((entry, i) => (
+                    <Tile key={entry.id} {...item(entry, i)} />
+                  ))}
+                </AnimatePresence>
               </div>
-            </section>
+            </motion.section>
           )}
 
           {!searching &&
             sections.map((section, n) => (
-              <section key={section.id} className="lib-section lib-hue" style={{ '--hue': section.hue } as CSSProperties}>
+              <motion.section
+                key={section.id}
+                className="lib-section lib-hue"
+                style={{ '--hue': section.hue } as MotionStyle}
+                layout="position"
+                transition={reflow()}
+                exit="out"
+                variants={leave}
+              >
                 <header className="lib-section-head">
                   <span className="lib-section-n">{String(n + 1).padStart(2, '0')}</span>
                   <h2>{section.name}</h2>
@@ -311,18 +350,31 @@ export function App() {
                   </span>
                 </header>
                 <div className="lib-tiles">
-                  {section.items.map((entry, i) => (
-                    <Tile key={entry.id} {...item(entry, i)} />
-                  ))}
+                  <AnimatePresence mode="popLayout" initial={false} custom={typing.now}>
+                    {section.items.map((entry, i) => (
+                      <Tile key={entry.id} {...item(entry, i)} />
+                    ))}
+                  </AnimatePresence>
                 </div>
-              </section>
+              </motion.section>
             ))}
+          </AnimatePresence>
         </div>
       </main>
 
       <div id="lib-status" className="lib-status" role="status" />
 
-      {openEntryData && <Panel entry={openEntryData} onClose={close} onOpen={openEntry} />}
+      {shownEntry && (
+        <Panel
+          entry={shownEntry}
+          open={open !== null}
+          instant={linked.current}
+          onClose={close}
+          onOpen={openEntry}
+          onClosed={() => setShown(null)}
+        />
+      )}
     </div>
+    </MotionConfig>
   );
 }

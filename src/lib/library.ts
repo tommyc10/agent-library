@@ -57,9 +57,6 @@ export const hueOf = (entry: Entry) => collectionById.get(entry.collection)?.hue
 /** What a skill is called by: `/animate`. Prompts and agent files use their title. */
 export const displayName = (entry: Entry) => (entry.type === 'skill' ? `/${entry.name}` : entry.title);
 
-/** A name safe to use as a view-transition-name. */
-export const transitionName = (id: string) => `e-${id.replace(/[^a-z0-9]/gi, '-')}`;
-
 const pluralRules = new Intl.PluralRules('en');
 
 /** A count with its noun: "1 file", "3 files". */

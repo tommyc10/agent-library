@@ -89,6 +89,26 @@
   color-scheme: light;
 }
 
+/* More contrast: edges you can see and secondary text close to the main text. */
+@media (prefers-contrast: more) {
+  :root {
+    --line: rgba(255, 255, 255, 0.2);
+    --line-2: rgba(255, 255, 255, 0.28);
+    --line-3: rgba(255, 255, 255, 0.4);
+    --fg-2: #c4c4c4;
+    --fg-3: #b0b0b0;
+    --focus-ring: rgba(255, 255, 255, 0.85);
+  }
+  :root[data-theme='light'] {
+    --line: rgba(0, 0, 0, 0.25);
+    --line-2: rgba(0, 0, 0, 0.35);
+    --line-3: rgba(0, 0, 0, 0.5);
+    --fg-2: #303030;
+    --fg-3: #404040;
+    --focus-ring: rgba(0, 0, 0, 0.85);
+  }
+}
+
 .lib-hue {
   --tone: oklch(var(--tone-l) var(--tone-c) var(--hue));
   --tone-wash: oklch(var(--tone-l) var(--tone-c) var(--hue) / 0.1);
@@ -141,15 +161,10 @@ p {
   margin: 0;
 }
 
-/* ---------- view transitions ----------
- * Filter changes and the detail panel both run as view transitions. An element with
- * `.lib-morph` keeps its content at its real size while its box moves and resizes,
- * so text never stretches: a tile grows into the panel instead of being scaled up. */
-
-::view-transition-group(*) {
-  animation-duration: 300ms;
-  animation-timing-function: var(--ease-drawer);
-}
+/* ---------- theme switch ----------
+ * Switching theme cross-fades the whole page as a view transition. Everything that moves
+ * runs on springs instead (src/lib/motion.ts), because a view transition can't be grabbed
+ * or reversed half way and takes every click while it runs. */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -157,25 +172,10 @@ p {
   animation-timing-function: var(--ease-out);
 }
 
-::view-transition-group(.lib-morph) {
-  overflow: clip;
-  border-radius: 12px;
-}
-
-::view-transition-old(.lib-morph),
-::view-transition-new(.lib-morph) {
-  width: 100%;
-  height: 100%;
-  object-fit: none;
-  object-position: top left;
-}
-
+/* Reduced motion keeps the feedback and drops the travel: things fade, nothing slides,
+ * grows or bounces. The parts that move set their still version in app.css. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 1ms !important;
-    animation-delay: 0ms !important;
-    transition-duration: 1ms !important;
+  :root {
+    --press: 1;
   }
 }

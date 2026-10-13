@@ -1,7 +1,8 @@
 import { FileText, MessageSquareText, Zap } from 'lucide-react';
-import type { CSSProperties } from 'react';
-import { displayName, fillPrompt, hueOf, transitionName, TYPES, type Entry, type EntryType } from '../lib/library';
-import { useStill } from '../lib/motion';
+import { motion, type MotionStyle, type Variants } from 'motion/react';
+import type { Ref } from 'react';
+import { displayName, fillPrompt, hueOf, TYPES, type Entry, type EntryType } from '../lib/library';
+import { spring, typing, useStill } from '../lib/motion';
 import { CopyButton } from './CopyButton';
 import { Drawing } from './Preview';
 
@@ -15,28 +16,34 @@ export interface ItemProps {
   entry: Entry;
   /** Position in its group, for the staggered arrival. */
   index: number;
-  /** True while this item should move as its own layer in a view transition. */
-  named: boolean;
   active: boolean;
   onOpen: (id: string) => void;
+  ref?: Ref<HTMLDivElement>;
 }
 
-function itemStyle({ entry, index, named }: ItemProps) {
-  return {
-    '--hue': hueOf(entry),
-    '--i': Math.min(index, 10),
-    viewTransitionName: named ? transitionName(entry.id) : undefined,
-  } as CSSProperties;
-}
+/** How tiles and sections move to their new places when a filter changes: a spring that
+ * starts from where they are, so clicking through filters quickly never makes them jump.
+ * While typing, results change on every key, so they go straight there. */
+export const reflow = () => (typing.now ? { duration: 0 } : spring(1, 0.35));
+
+/** Leaving: a quick fade where it stood, while the rest close the gap. `custom` is
+ * whether typing is under way, read when the exit starts rather than when last drawn. */
+export const leave: Variants = {
+  out: (still: boolean) => ({ opacity: 0, transition: still ? { duration: 0 } : { duration: 0.15 } }),
+};
 
 /** One entry in the gallery: its picture, its name and what it is for. */
-export function Tile(props: ItemProps) {
-  const { entry, active, onOpen } = props;
+export function Tile({ entry, index, active, onOpen, ref }: ItemProps) {
   const Icon = TYPE_ICON[entry.type];
   return (
-    <div
-      className="lib-tile lib-hue lib-morph"
-      style={itemStyle(props)}
+    <motion.div
+      ref={ref}
+      layout="position"
+      transition={reflow()}
+      exit="out"
+      variants={leave}
+      className="lib-tile lib-hue"
+      style={{ '--hue': hueOf(entry), '--i': Math.min(index, 10) } as MotionStyle}
       data-entry={entry.id}
       data-active={active || undefined}
       data-still={useStill()}
@@ -58,6 +65,6 @@ export function Tile(props: ItemProps) {
           title={entry.type === 'prompt' ? 'Copy prompt' : 'Copy file'}
         />
       )}
-    </div>
+    </motion.div>
   );
 }
