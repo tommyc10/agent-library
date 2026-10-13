@@ -1,6 +1,8 @@
 import { Link2, X } from 'lucide-react';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { displayName, entries, getCollection, getEntry, hueOf, transitionName, TYPES, type Entry } from '../lib/library';
+import { motion, type MotionStyle } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { displayName, entries, getCollection, getEntry, hueOf, TYPES, type Entry } from '../lib/library';
+import { usePanelMotion } from '../lib/panel-motion';
 import { CopyButton } from './CopyButton';
 import { TYPE_ICON } from './Items';
 import { localTarget, Markdown } from './Markdown';
@@ -8,8 +10,14 @@ import { PromptBody } from './PromptBody';
 
 interface Props {
   entry: Entry;
+  /** False while the panel is on its way out: the page behind is already live again. */
+  open: boolean;
+  /** Open already when the page loaded, from a link: no entrance. */
+  instant: boolean;
   onClose: () => void;
   onOpen: (id: string) => void;
+  /** Called once the panel has finished leaving. */
+  onClosed: () => void;
 }
 
 /** A markdown file, shown rendered or as the raw text you would copy. */
@@ -117,23 +125,18 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
   );
 }
 
-export function Panel({ entry, onClose, onOpen }: Props) {
+export function Panel({ entry, open, instant, onClose, onOpen, onClosed }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const motionValues = usePanelMotion(ref, { id: entry.id, open, instant, onClosed });
   const collection = getCollection(entry.collection);
   const type = TYPES.find((t) => t.id === entry.type)!;
   const Icon = TYPE_ICON[entry.type];
   const skill = entry.skill ? getEntry(`skill/${entry.skill}`) : undefined;
 
-  // Move focus into the panel, and hand it back to where it was on close.
+  // Opening, or a new entry in the same panel: back to the top, and take focus if it isn't
+  // already inside. The app hands focus back to the page as soon as closing starts.
   useEffect(() => {
-    const before = document.activeElement as HTMLElement | null;
-    ref.current?.focus({ preventScroll: true });
-    return () => before?.focus?.({ preventScroll: true });
-  }, []);
-
-  // A new entry in the same panel: back to the top, and take focus back if the
-  // button that was pressed went away with the old entry.
-  useEffect(() => {
+    if (!open) return;
     const panel = ref.current;
     panel?.scrollTo({ top: 0 });
     if (!panel?.contains(document.activeElement)) panel?.focus({ preventScroll: true });
@@ -142,19 +145,29 @@ export function Panel({ entry, onClose, onOpen }: Props) {
     return () => {
       document.title = title;
     };
-  }, [entry]);
+  }, [entry, open]);
 
   return (
     <>
-      <div className="lib-scrim" onClick={onClose} />
-      <div
+      <motion.div className="lib-scrim" data-leaving={!open || undefined} style={{ opacity: motionValues.scrim }} onClick={onClose} />
+      <motion.div className="lib-panel-shadow" aria-hidden style={{ x: motionValues.x, y: motionValues.y, opacity: motionValues.shadow }} />
+      <motion.div
         ref={ref}
-        className="lib-panel lib-hue lib-morph"
+        className="lib-panel lib-hue"
         role="dialog"
         aria-modal="true"
         aria-label={displayName(entry)}
         tabIndex={-1}
-        style={{ '--hue': hueOf(entry), viewTransitionName: transitionName(entry.id) } as CSSProperties}
+        inert={!open}
+        style={
+          {
+            '--hue': hueOf(entry),
+            x: motionValues.x,
+            y: motionValues.y,
+            clipPath: motionValues.clipPath,
+            opacity: motionValues.fade,
+          } as MotionStyle
+        }
         // Set on the element directly: a re-render on every scroll event would redraw the markdown.
         onScroll={(event) => event.currentTarget.toggleAttribute('data-scrolled', event.currentTarget.scrollTop > 0)}
       >
@@ -204,7 +217,7 @@ export function Panel({ entry, onClose, onOpen }: Props) {
             <span>{entry.id}</span>
           </footer>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }

@@ -528,6 +528,11 @@
 
 /* ---------- sections ---------- */
 
+/* Sections and tiles that are leaving are lifted out to here while they fade. */
+.lib-body {
+  position: relative;
+}
+
 .lib-section {
   margin-top: 52px;
 }
@@ -560,6 +565,7 @@
 
 /* The gallery: every entry is a large frame with a caption under it. */
 .lib-tiles {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(18.75rem, 100%), 1fr));
   gap: 28px 16px;
@@ -569,10 +575,11 @@
   animation: lib-arrive 260ms var(--ease-out) backwards;
   animation-delay: calc(var(--i) * 22ms);
 }
+/* `translate`, not `transform`: Motion moves tiles with `transform` when a filter changes. */
 @keyframes lib-arrive {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    translate: 0 6px;
   }
 }
 
@@ -730,17 +737,30 @@
   z-index: 50;
   background: var(--overlay);
 }
+/* On its way out the panel lets clicks through to the page at once. */
+.lib-scrim[data-leaving] {
+  pointer-events: none;
+}
 
-.lib-panel {
+.lib-panel,
+.lib-panel-shadow {
   position: fixed;
-  z-index: 51;
   top: 10px;
   right: 10px;
   bottom: 10px;
   width: min(48.75rem, calc(100vw - 20px));
   border-radius: 14px;
-  background: var(--l2);
+}
+/* The panel is cut to its tile's shape as it grows, which would cut its shadow too,
+ * so the shadow and edge sit on a layer of their own behind it. */
+.lib-panel-shadow {
+  z-index: 50;
   box-shadow: 0 0 0 1px var(--line-2), var(--shadow-palette);
+  pointer-events: none;
+}
+.lib-panel {
+  z-index: 51;
+  background: var(--l2);
   overflow-y: auto;
   overscroll-behavior: contain;
   outline: 0;
@@ -1181,6 +1201,9 @@
     inset: 0;
     width: 100vw;
     border-radius: 0;
+  }
+  .lib-panel-shadow {
+    display: none;
   }
   .lib-panel-body {
     padding: 22px 18px 32px;

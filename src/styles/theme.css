@@ -161,33 +161,15 @@ p {
   margin: 0;
 }
 
-/* ---------- view transitions ----------
- * Filter changes and the detail panel both run as view transitions. An element with
- * `.lib-morph` keeps its content at its real size while its box moves and resizes,
- * so text never stretches: a tile grows into the panel instead of being scaled up. */
-
-::view-transition-group(*) {
-  animation-duration: 300ms;
-  animation-timing-function: var(--ease-drawer);
-}
+/* ---------- theme switch ----------
+ * Switching theme cross-fades the whole page as a view transition. Everything that moves
+ * runs on springs instead (src/lib/motion.ts), because a view transition can't be grabbed
+ * or reversed half way and takes every click while it runs. */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 200ms;
   animation-timing-function: var(--ease-out);
-}
-
-::view-transition-group(.lib-morph) {
-  overflow: clip;
-  border-radius: 12px;
-}
-
-::view-transition-old(.lib-morph),
-::view-transition-new(.lib-morph) {
-  width: 100%;
-  height: 100%;
-  object-fit: none;
-  object-position: top left;
 }
 
 /* Reduced motion keeps the feedback and drops the travel: things fade, nothing slides,
