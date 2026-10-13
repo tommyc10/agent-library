@@ -19,6 +19,9 @@ const isTyping = (target: EventTarget | null) =>
 
 const count = (list: Entry[], type: EntryType) => list.filter((e) => e.type === type).length;
 
+/** How many panel entries this tab has stacked on the history entry it opened from. */
+const depth = (): number => history.state?.depth ?? 0;
+
 export function App() {
   const [type, setType] = useState<TypeFilter>('all');
   const [collection, setCollection] = useState<string | null>(null);
@@ -33,6 +36,8 @@ export function App() {
   // What had focus when the panel opened. The page behind goes inert, which drops focus,
   // so it has to be noted before that and handed back once the page is live again.
   const opener = useRef<HTMLElement | null>(null);
+  // Set while `close` walks back through history, so the popstate it causes closes the panel.
+  const leaving = useRef(false);
 
   const searching = query.trim().length > 0;
   const matched = useMemo(() => search(query, entries), [query]);
@@ -59,22 +64,38 @@ export function App() {
     transition(update, () => setNamed(null));
   };
 
-  const openEntry = (id: string) => {
-    history.pushState(null, '', `#/${id}`);
-    if (open) return setOpen(id);
+  const show = (id: string) => {
     opener.current = document.activeElement as HTMLElement | null;
     flushSync(() => name(id));
     transition(() => setOpen(id));
   };
 
-  const close = () => {
-    if (!open) return;
-    history.pushState(null, '', location.pathname + location.search);
-    flushSync(() => name(open));
+  const hide = () => {
+    flushSync(() => name(open!));
     transition(
       () => setOpen(null),
       () => setNamed(null),
     );
+  };
+
+  const openEntry = (id: string) => {
+    history.pushState({ depth: depth() + 1 }, '', `#/${id}`);
+    if (open) return setOpen(id);
+    show(id);
+  };
+
+  // The close button, Escape and Back all leave the same way: back to the history entry
+  // the panel was opened from, so Back afterwards never opens it again.
+  const close = () => {
+    if (!open) return;
+    if (depth() > 0) {
+      leaving.current = true;
+      history.go(-depth());
+    } else {
+      // Arrived here from a link, with no list behind it: this entry becomes the list.
+      history.replaceState(null, '', location.pathname + location.search);
+      hide();
+    }
   };
 
   const toggleTheme = () => {
@@ -88,10 +109,21 @@ export function App() {
   }, [theme]);
 
   useEffect(() => {
-    const onPop = () => setOpen(readHash());
+    const onPop = () => {
+      const id = readHash();
+      if (leaving.current) {
+        leaving.current = false;
+        if (id) history.replaceState(null, '', location.pathname + location.search);
+        return hide();
+      }
+      if (id === open) return;
+      if (!id) hide();
+      else if (open) setOpen(id);
+      else show(id);
+    };
     addEventListener('popstate', onPop);
     return () => removeEventListener('popstate', onPop);
-  }, []);
+  });
 
   useEffect(() => {
     document.documentElement.toggleAttribute('data-locked', open !== null);
