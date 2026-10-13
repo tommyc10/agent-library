@@ -1,6 +1,7 @@
-import { Link2, X } from 'lucide-react';
+import { Download, Link2, X } from 'lucide-react';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { displayName, entries, getCollection, getEntry, hueOf, transitionName, TYPES, type Entry } from '../lib/library';
+import { downloadSkill, skillFileCount } from '../lib/download';
+import { displayName, entries, getCollection, getEntry, hueOf, plural, transitionName, TYPES, type Entry } from '../lib/library';
 import { CopyButton } from './CopyButton';
 import { TYPE_ICON } from './Items';
 import { localTarget, Markdown } from './Markdown';
@@ -21,7 +22,16 @@ function Document({ files, path }: { files: { name: string; body: string }[]; pa
   return (
     <section className="lib-doc">
       <div className="lib-doc-bar">
-        {files.length > 1 ? (
+        {/* A skill with a folder of playbooks has too many files for tabs. */}
+        {files.length > 6 ? (
+          <select className="lib-select" aria-label="File" value={file} onChange={(event) => setFile(Number(event.target.value))}>
+            {files.map((f, i) => (
+              <option key={f.name} value={i}>
+                {f.name}
+              </option>
+            ))}
+          </select>
+        ) : files.length > 1 ? (
           <div className="lib-seg" role="group" aria-label="File">
             {files.map((f, i) => (
               <button key={f.name} type="button" aria-pressed={i === file} onClick={() => setFile(i)}>
@@ -65,10 +75,13 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
   const prompts = entries.filter((e) => e.type === 'prompt' && e.skill === entry.name);
   const calls = [
     { where: 'Claude Code', text: `/${entry.name}` },
+    { where: 'GitHub Copilot', text: `/${entry.name}` },
     { where: 'Codex', text: `$${entry.name}` },
     { where: 'Anything else', text: `Use the ${entry.name} skill` },
   ];
-  const extras = (entry.files ?? []).filter((f) => !f.endsWith('.md'));
+  // A folder of scripts is one chip, `scripts/`, not one per file.
+  const extras = [...new Set((entry.files ?? []).filter((f) => !f.endsWith('.md')).map((f) => f.replace(/\/.*/, '/')))];
+  const fileCount = skillFileCount(entry);
 
   return (
     <>
@@ -82,6 +95,19 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
               <CopyButton text={call.text} title={`Copy ${call.text}`} />
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="lib-block">
+        <h3 className="lib-label">Get it</h3>
+        <div className="lib-get">
+          <button type="button" className="lib-btn" onClick={() => void downloadSkill(entry)}>
+            <Download size={14} />
+            Download folder
+          </button>
+          <span>
+            {plural(fileCount, 'file')} in a .zip. Unzip it into your skills folder and keep the folder name.
+          </span>
         </div>
       </section>
 

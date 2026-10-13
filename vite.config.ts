@@ -24,6 +24,24 @@ function markdownIn(dir: string) {
   return existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.md')).sort() : [];
 }
 
+/** The markdown under a skill folder, top level first: `RECIPES.md`, then `playbooks/bug-fix.md`. */
+function markdownUnder(dir: string, prefix = ''): string[] {
+  const all = readdirSync(dir, { withFileTypes: true });
+  return [
+    ...markdownIn(dir).map((f) => prefix + f),
+    ...all
+      .filter((f) => f.isDirectory())
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .flatMap((f) => markdownUnder(join(dir, f.name), `${prefix}${f.name}/`)),
+  ];
+}
+
+/** A file in a collection's folder, if it has one: its guide, or the licence its download ships with. */
+function collectionFile(id: string, file: string) {
+  const path = join(CONTENT, 'collections', id, file);
+  return existsSync(path) ? readFileSync(path, 'utf8') : undefined;
+}
+
 /** Everything under content/ as one JSON module. The files are the library. */
 function collect() {
   const config = parse(readFileSync(join(CONTENT, 'library.yml'), 'utf8'));
@@ -47,7 +65,7 @@ function collect() {
       body,
       raw,
       files: listed,
-      docs: markdownIn(dir)
+      docs: markdownUnder(dir)
         .filter((f) => f !== 'SKILL.md')
         .map((f) => ({ name: f, body: readFileSync(join(dir, f), 'utf8') })),
       ...config.skills?.[name],
@@ -59,6 +77,9 @@ function collect() {
     for (const file of markdownIn(dir)) {
       const { meta, body, raw } = readMarkdown(join(dir, file));
       const name = basename(file, '.md');
+      // An agent placed from library.yml came from somewhere else as it is. Its frontmatter
+      // belongs to the file (the tool reads its name and description), so it is shown and copied too.
+      const placed = type === 'agent' ? config.agents?.[name] : undefined;
       entries.push({
         id: `${type}/${name}`,
         type,
@@ -67,14 +88,21 @@ function collect() {
         description: '',
         collection: 'other',
         tags: [],
-        body,
+        body: placed ? raw.trim() : body,
         raw: type === 'prompt' ? body : raw,
         ...meta,
+        ...placed,
       });
     }
   }
 
-  return { collections: config.collections, examples: config.examples ?? [], entries };
+  const collections = (config.collections as { id: string }[]).map((c) => ({
+    ...c,
+    guide: collectionFile(c.id, 'guide.md'),
+    license: collectionFile(c.id, 'LICENSE'),
+  }));
+
+  return { collections, examples: config.examples ?? [], entries };
 }
 
 function library(): Plugin {

@@ -158,6 +158,14 @@
   background: var(--l4);
   color: var(--fg);
 }
+.lib-btn[data-tone] {
+  background: var(--tone-wash);
+  box-shadow: inset 0 0 0 1px var(--tone-wash);
+  color: var(--tone);
+}
+.lib-btn[data-tone]:hover {
+  background: var(--l5);
+}
 
 /* A number that rolls to its new value. */
 .lib-roll {
@@ -540,10 +548,45 @@
   font: 500 var(--text-xs)/1 var(--mono);
   color: var(--tone);
 }
+/* Same weight as the ghost rule above, and later, so its tone wins. */
+.lib-btn.lib-section-guide {
+  align-self: center;
+  height: 26px;
+  font-size: var(--text-xs);
+  color: var(--tone);
+}
 .lib-section-count {
   margin-left: auto;
   font: 400 var(--text-xs)/1 var(--mono);
   color: var(--fg-3);
+}
+
+/* A collection's guide: what it is and how to set it up, above its entries. */
+.lib-guide {
+  margin-bottom: 44px;
+  scroll-margin-top: 24px;
+  border-radius: 14px;
+  background: var(--l3);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.lib-guide-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px 12px 24px;
+  border-bottom: 1px solid var(--line);
+}
+.lib-guide-name {
+  font: 500 var(--text-xs)/1 var(--mono);
+  color: var(--tone);
+}
+.lib-guide-bar .lib-btn {
+  margin-left: auto;
+}
+.lib-guide-count {
+  font-size: var(--text-xs);
+  opacity: 0.7;
 }
 
 /* The gallery: every entry is a large frame with a caption under it. */
@@ -797,6 +840,15 @@
   color: var(--fg-3);
 }
 
+.lib-get {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  font-size: var(--text-sm);
+  color: var(--fg-3);
+}
+
 .lib-calls {
   display: grid;
   border-radius: 10px;
@@ -940,6 +992,17 @@
   gap: 8px;
   padding: 8px 8px 8px 10px;
   border-bottom: 1px solid var(--line);
+}
+.lib-select {
+  height: 30px;
+  max-width: 100%;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--l1);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font: 400 var(--text-xs)/1 var(--mono);
+  color: var(--fg);
 }
 .lib-doc-name {
   padding-left: 6px;
@@ -1159,6 +1222,12 @@
   }
   .lib-section-head p {
     display: none;
+  }
+  .lib-guide-bar {
+    padding-left: 16px;
+  }
+  .lib-guide-bar .lib-btn {
+    margin-left: 0;
   }
   .lib-panel {
     inset: 0;

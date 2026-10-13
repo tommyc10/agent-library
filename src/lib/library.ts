@@ -31,6 +31,10 @@ export interface Collection {
   name: string;
   hue: number;
   description: string;
+  /** Markdown shown above the collection when it is opened: what it is and how to set it up. */
+  guide?: string;
+  /** Licence text its download ships with, for collections copied from elsewhere. */
+  license?: string;
 }
 
 export interface LibraryData {

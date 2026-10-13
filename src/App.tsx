@@ -1,6 +1,7 @@
-import { LayoutGrid, Moon, Search, Sun, X } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { BookOpen, LayoutGrid, Moon, Search, Sun, X } from 'lucide-react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { flushSync } from 'react-dom';
+import { Guide } from './components/Guide';
 import { Tile, TYPE_ICON } from './components/Items';
 import { Panel } from './components/Panel';
 import { Roll } from './components/Roll';
@@ -45,6 +46,7 @@ export function App() {
   const sections = collections
     .map((c) => ({ ...c, items: visible.filter((e) => e.collection === c.id) }))
     .filter((s) => s.items.length > 0);
+  const opened = collections.find((c) => c.id === collection);
 
   // The order the arrow keys walk in: top to bottom as drawn.
   const order = searching ? visible.map((e) => e.id) : sections.flatMap((s) => s.items.map((e) => e.id));
@@ -123,6 +125,13 @@ export function App() {
     addEventListener('keydown', onKey);
     return () => removeEventListener('keydown', onKey);
   });
+
+  // Opening a collection from far down the page would land below its guide. Runs before the
+  // view transition takes its picture of the new page, so the page arrives already scrolled.
+  useLayoutEffect(() => {
+    const guide = document.querySelector('.lib-guide');
+    if (guide && guide.getBoundingClientRect().top < 0) guide.scrollIntoView({ block: 'start' });
+  }, [opened]);
 
   useEffect(() => {
     if (!active) return;
@@ -283,6 +292,8 @@ export function App() {
             </div>
           )}
 
+          {!searching && opened?.guide && <Guide collection={opened} guide={opened.guide} onOpen={openEntry} />}
+
           {searching && visible.length > 0 && (
             <section className="lib-section">
               <header className="lib-section-head">
@@ -306,6 +317,17 @@ export function App() {
                   <span className="lib-section-n">{String(n + 1).padStart(2, '0')}</span>
                   <h2>{section.name}</h2>
                   <p>{section.description}</p>
+                  {section.guide && collection !== section.id && (
+                    <button
+                      type="button"
+                      className="lib-btn lib-section-guide"
+                      data-variant="ghost"
+                      onClick={() => refilter(() => setCollection(section.id))}
+                    >
+                      <BookOpen size={13} />
+                      Guide
+                    </button>
+                  )}
                   <span className="lib-section-count">
                     <Roll value={section.items.length} />
                   </span>
