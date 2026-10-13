@@ -155,6 +155,8 @@ export function Panel({ entry, onClose, onOpen }: Props) {
         aria-label={displayName(entry)}
         tabIndex={-1}
         style={{ '--hue': hueOf(entry), viewTransitionName: transitionName(entry.id) } as CSSProperties}
+        // Set on the element directly: a re-render on every scroll event would redraw the markdown.
+        onScroll={(event) => event.currentTarget.toggleAttribute('data-scrolled', event.currentTarget.scrollTop > 0)}
       >
         <header className="lib-panel-head">
           <span className="lib-badge" data-tone>
