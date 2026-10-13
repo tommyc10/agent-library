@@ -2,7 +2,7 @@
 
 .lib {
   display: grid;
-  grid-template-columns: 248px minmax(0, 1fr);
+  grid-template-columns: 15.5rem minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -59,8 +59,8 @@
 .lib-kbd {
   display: inline-grid;
   place-items: center;
-  height: 18px;
-  min-width: 18px;
+  height: 1.125rem;
+  min-width: 1.125rem;
   padding: 0 4px;
   border-radius: 4px;
   background: var(--tint);
@@ -72,7 +72,7 @@
 .lib-chip {
   display: inline-flex;
   align-items: center;
-  height: 20px;
+  height: 1.25rem;
   padding: 0 7px;
   border-radius: 999px;
   background: var(--tint);
@@ -93,7 +93,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 24px;
+  height: 1.5rem;
   padding: 0 9px;
   border-radius: 999px;
   background: var(--tone-wash);
@@ -133,7 +133,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 34px;
+  min-height: 2.125rem;
   padding: 0 14px;
   border-radius: 9px;
   background: var(--l4);
@@ -207,10 +207,13 @@
   transform: scale(var(--press));
 }
 .lib-copy[data-variant='ghost'] {
+  height: auto;
+  min-height: 1.75rem;
   padding: 0 10px;
 }
 .lib-copy[data-variant='primary'] {
-  height: 34px;
+  height: auto;
+  min-height: 2.125rem;
   padding: 0 8px 0 14px;
   border-radius: 9px;
   background: var(--primary);
@@ -265,7 +268,7 @@
   overflow-x: auto;
 }
 .lib-seg button {
-  height: 26px;
+  min-height: 1.625rem;
   padding: 0 9px;
   border-radius: 7px;
   font-size: var(--text-xs);
@@ -331,11 +334,11 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 32px;
+  height: 2rem;
   border-radius: 7px;
   background: var(--l4);
   box-shadow: inset 0 0 0 1px var(--line);
-  transform: translateY(calc(var(--at) * 34px));
+  transform: translateY(calc(var(--at) * (2rem + 2px)));
   transition: transform 240ms var(--ease-in-out);
 }
 
@@ -345,13 +348,18 @@
   grid-template-columns: 14px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
-  height: 32px;
+  height: 2rem;
   padding: 0 10px;
   border-radius: 7px;
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--fg-2);
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 100ms var(--ease-out);
+}
+.lib-nav-item > :nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /* A wide row presses less than a small button, like a tile. */
 .lib-nav-item:active {
@@ -413,7 +421,7 @@
 }
 
 .lib-hero h1 {
-  max-width: 620px;
+  max-width: 38.75rem;
   font-size: var(--text-4xl);
   font-weight: 600;
   line-height: 1.04;
@@ -437,8 +445,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: 720px;
-  height: 54px;
+  max-width: 45rem;
+  min-height: 3.375rem;
   margin-top: 30px;
   padding: 0 14px 0 18px;
   border-radius: 14px;
@@ -502,7 +510,7 @@
   margin-right: 4px;
 }
 .lib-example {
-  min-height: 26px;
+  min-height: 1.625rem;
   padding: 3px 10px;
   border-radius: 13px;
   box-shadow: inset 0 0 0 1px var(--line);
@@ -553,7 +561,7 @@
 /* The gallery: every entry is a large frame with a caption under it. */
 .lib-tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(18.75rem, 100%), 1fr));
   gap: 28px 16px;
 }
 
@@ -729,7 +737,7 @@
   top: 10px;
   right: 10px;
   bottom: 10px;
-  width: min(780px, calc(100vw - 20px));
+  width: min(48.75rem, calc(100vw - 20px));
   border-radius: 14px;
   background: var(--l2);
   box-shadow: 0 0 0 1px var(--line-2), var(--shadow-palette);
@@ -745,7 +753,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 52px;
+  min-height: 3.25rem;
   padding: 0 12px 0 20px;
   background: var(--glass);
   backdrop-filter: blur(20px) saturate(1.2);
@@ -814,10 +822,10 @@
 }
 .lib-call {
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr) auto;
+  grid-template-columns: 7.5rem minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  min-height: 40px;
+  min-height: 2.5rem;
   padding: 0 6px 0 14px;
 }
 .lib-call + .lib-call {
@@ -842,10 +850,10 @@
 }
 .lib-link-row {
   display: grid;
-  grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
   gap: 12px;
   align-items: center;
-  min-height: 38px;
+  min-height: 2.375rem;
   padding: 0 10px;
   border-radius: 8px;
   font-size: var(--text-sm);
@@ -1062,7 +1070,7 @@
   position: absolute;
   top: 7px;
   right: 7px;
-  height: 24px;
+  min-height: 1.5rem;
   padding: 0 8px;
   border-radius: 6px;
   background: var(--l4);
@@ -1114,7 +1122,7 @@
 
 /* ---------- small screens ---------- */
 
-@media (max-width: 900px) {
+@media (max-width: 56.25em) {
   .lib {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1181,7 +1189,7 @@
     padding: 4px 16px 20px;
   }
   .lib-call {
-    grid-template-columns: 96px minmax(0, 1fr) auto;
+    grid-template-columns: 6rem minmax(0, 1fr) auto;
   }
   .lib-link-row {
     grid-template-columns: minmax(0, 1fr);
