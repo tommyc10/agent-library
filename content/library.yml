@@ -24,6 +24,10 @@ collections:
     name: Ways of working
     hue: 195
     description: Prompts and agent files that shape how an agent behaves in a repo.
+  - id: pstack
+    name: pstack
+    hue: 330
+    description: poteto's engineering workflows and principles, from Cursor's plugin. Open it for the setup guide.
 
 # Shown under the search field. Clicking one runs it.
 examples:
@@ -32,6 +36,7 @@ examples:
   - show how an order moves through our services
   - hand a task to another agent
   - add a toast
+  - tear this diff apart
 
 # Where each skill sits and which preview its tile draws.
 # Previews: curve, timeline, spotlight, scroll, blocks, phone.
@@ -63,3 +68,65 @@ skills:
   mobile-native: { collection: native, preview: phone, tags: [web] }
   animate-expo: { collection: native, preview: phone, tags: [build] }
   write-swift: { collection: native, preview: phone, tags: [swift] }
+  # pstack, copied from github.com/cursor/plugins (pstack 0.15.23, commit dbf4981). Its guide is content/collections/pstack/guide.md.
+  poteto-mode: { collection: pstack, preview: spotlight, tags: [start here, workflow] }
+  poteto-help: { collection: pstack, preview: spotlight, tags: [start here, help] }
+  setup-pstack: { collection: pstack, preview: spotlight, tags: [setup, cursor only] }
+  in-your-own-words: { collection: pstack, preview: spotlight, tags: [planning] }
+  how: { collection: pstack, preview: scroll, tags: [understand] }
+  why: { collection: pstack, preview: scroll, tags: [understand, history] }
+  teach: { collection: pstack, preview: scroll, tags: [understand] }
+  recall: { collection: pstack, preview: scroll, tags: [context, cursor only] }
+  ketchup: { collection: pstack, preview: scroll, tags: [context] }
+  bro: { collection: pstack, preview: scroll, tags: [writing] }
+  architect: { collection: pstack, preview: timeline, tags: [design] }
+  arena: { collection: pstack, preview: timeline, tags: [design, parallel] }
+  swarm: { collection: pstack, preview: timeline, tags: [parallel] }
+  figure-it-out: { collection: pstack, preview: timeline, tags: [planning] }
+  show-me-your-work: { collection: pstack, preview: timeline, tags: [decision log] }
+  interrogate: { collection: pstack, preview: curve, tags: [review] }
+  blast-radius: { collection: pstack, preview: curve, tags: [review] }
+  no-comments: { collection: pstack, preview: curve, tags: [review] }
+  benchmark-checklist: { collection: pstack, preview: curve, tags: [performance] }
+  tdd: { collection: pstack, preview: curve, tags: [testing] }
+  create-verification-skill: { collection: pstack, preview: curve, tags: [verify] }
+  maintain-verification-skill: { collection: pstack, preview: curve, tags: [verify] }
+  correct: { collection: pstack, preview: curve, tags: [lint, guardrails] }
+  unslop: { collection: pstack, preview: blocks, tags: [writing] }
+  technical-writing: { collection: pstack, preview: blocks, tags: [writing, docs] }
+  typescript-best-practices: { collection: pstack, preview: blocks, tags: [typescript] }
+  reflect: { collection: pstack, preview: blocks, tags: [meta, cursor only] }
+  automate-me: { collection: pstack, preview: blocks, tags: [meta, cursor only] }
+  make-bot-ui: { collection: pstack, preview: blocks, tags: [cursor only] }
+  principle-laziness-protocol: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-foundational-thinking: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-redesign-from-first-principles: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-attack-the-premise: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-subtract-before-you-add: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-minimize-reader-load: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-outcome-oriented-execution: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-experience-first: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-exhaust-the-design-space: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-build-the-lever: { collection: pstack, preview: blocks, tags: [principle, core] }
+  principle-model-the-domain: { collection: pstack, preview: blocks, tags: [principle, architecture] }
+  principle-boundary-discipline: { collection: pstack, preview: blocks, tags: [principle, architecture] }
+  principle-type-system-discipline: { collection: pstack, preview: blocks, tags: [principle, architecture] }
+  principle-make-operations-idempotent: { collection: pstack, preview: blocks, tags: [principle, architecture] }
+  principle-migrate-callers-then-delete-legacy-apis: { collection: pstack, preview: blocks, tags: [principle, architecture] }
+  principle-separate-before-serializing-shared-state: { collection: pstack, preview: blocks, tags: [principle, architecture] }
+  principle-prove-it-works: { collection: pstack, preview: blocks, tags: [principle, verification] }
+  principle-fix-root-causes: { collection: pstack, preview: blocks, tags: [principle, verification] }
+  principle-sequence-verifiable-units: { collection: pstack, preview: blocks, tags: [principle, verification] }
+  principle-test-behavior-not-implementation: { collection: pstack, preview: blocks, tags: [principle, verification] }
+  principle-explain-the-number: { collection: pstack, preview: blocks, tags: [principle, verification] }
+  principle-guard-the-context-window: { collection: pstack, preview: blocks, tags: [principle, delegation] }
+  principle-never-block-on-the-human: { collection: pstack, preview: blocks, tags: [principle, delegation] }
+  principle-encode-lessons-in-structure: { collection: pstack, preview: blocks, tags: [principle, meta] }
+
+# Agent files copied from elsewhere as they are. Their own frontmatter stays in the file,
+# so where they sit is set here instead.
+agents:
+  poteto-agent:
+    { collection: pstack, path: .github/agents/poteto-agent.agent.md, tags: [subagent, workflow] }
+  comment-sicko:
+    { collection: pstack, path: .github/agents/comment-sicko.agent.md, tags: [subagent, review] }

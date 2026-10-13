@@ -1,0 +1,15 @@
+[
+  "SKILL.md",
+  "references/epistemics.md",
+  "references/investigator-prompt.md",
+  "references/source-playbook.md",
+  "references/sources/code-archaeology.md",
+  "references/sources/databricks.md",
+  "references/sources/datadog.md",
+  "references/sources/incident-postmortem.md",
+  "references/sources/linear.md",
+  "references/sources/notion.md",
+  "references/sources/sentry.md",
+  "references/sources/slack.md",
+  "references/synthesizer-prompt.md"
+]
