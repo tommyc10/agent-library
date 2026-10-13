@@ -784,6 +784,10 @@
 .lib-panel[data-scrolled] .lib-panel-head {
   border-bottom-color: var(--line);
 }
+/* The handle a sheet is dragged by. Only a sheet has one. */
+.lib-grabber {
+  display: none;
+}
 .lib-panel-collection {
   font-size: var(--text-xs);
   color: var(--fg-3);
@@ -1197,13 +1201,34 @@
   .lib-section-head p {
     display: none;
   }
+  /* The panel is a sheet: it rises from the bottom edge, leaving a strip of the page
+   * showing above it, and is dragged down by its header to put it away. */
   .lib-panel {
-    inset: 0;
-    width: 100vw;
-    border-radius: 0;
+    inset: 12px 0 0;
+    width: auto;
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 0 0 1px var(--line-2);
   }
   .lib-panel-shadow {
     display: none;
+  }
+  .lib-panel-head {
+    padding-top: 10px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+  .lib-grabber {
+    display: block;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    width: 36px;
+    height: 5px;
+    margin-left: -18px;
+    border-radius: 999px;
+    background: var(--line-3);
   }
   .lib-panel-body {
     padding: 22px 18px 32px;

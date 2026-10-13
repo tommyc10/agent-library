@@ -127,7 +127,7 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
 
 export function Panel({ entry, open, instant, onClose, onOpen, onClosed }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const motionValues = usePanelMotion(ref, { id: entry.id, open, instant, onClosed });
+  const motionValues = usePanelMotion(ref, { id: entry.id, open, instant, onClosed, onDismiss: onClose });
   const collection = getCollection(entry.collection);
   const type = TYPES.find((t) => t.id === entry.type)!;
   const Icon = TYPE_ICON[entry.type];
@@ -171,7 +171,8 @@ export function Panel({ entry, open, instant, onClose, onOpen, onClosed }: Props
         // Set on the element directly: a re-render on every scroll event would redraw the markdown.
         onScroll={(event) => event.currentTarget.toggleAttribute('data-scrolled', event.currentTarget.scrollTop > 0)}
       >
-        <header className="lib-panel-head">
+        <header className="lib-panel-head" {...motionValues.dragHandlers}>
+          <span className="lib-grabber" aria-hidden />
           <span className="lib-badge" data-tone>
             <Icon size={12} />
             {type.label}

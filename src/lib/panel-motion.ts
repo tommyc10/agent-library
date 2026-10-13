@@ -1,6 +1,6 @@
 import { animate, useMotionValue, useTransform, type MotionValue } from 'motion/react';
-import { useLayoutEffect, useRef, type RefObject } from 'react';
-import { reducedMotion, spring } from './motion';
+import { useLayoutEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
+import { project, reducedMotion, rubberband, spring } from './motion';
 
 /** Below this width the panel is a sheet that rises from the bottom edge. */
 export const SHEET = '(max-width: 56.25em)';
@@ -10,6 +10,10 @@ const RADIUS = 14;
 const GLIDE = spring(1, 0.35);
 const FADE_IN = spring(1, 0.2);
 const CALM = { duration: 0.2, ease: 'easeOut' } as const;
+// A sheet let go after a drag: a little bounce, because the hand gave it momentum.
+const SETTLE = spring(0.8, 0.3);
+// How far a press has to move before it is a drag rather than a tap.
+const SLOP = 10;
 
 type Box = { left: number; top: number; width: number; height: number };
 
@@ -28,7 +32,11 @@ interface Options {
   /** Open already when the page loaded, from a link: no entrance. */
   instant: boolean;
   onClosed: () => void;
+  /** Asked to close by a drag that threw the sheet down. */
+  onDismiss: () => void;
 }
+
+type Drag = { handle: HTMLElement; pointer: number; startY: number; from: number; moving: boolean; trail: { y: number; t: number }[] };
 
 /**
  * Moves the panel between its tile and its place, on four springs: across, down, and how
@@ -36,7 +44,7 @@ interface Options {
  * on screen at that moment, carrying the speed it has, so closing a panel that is still
  * opening simply turns it round. The content keeps its real size and is cut, never stretched.
  */
-export function usePanelMotion(ref: RefObject<HTMLElement | null>, { id, open, instant, onClosed }: Options) {
+export function usePanelMotion(ref: RefObject<HTMLElement | null>, { id, open, instant, onClosed, onDismiss }: Options) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const cutRight = useMotionValue(0);
@@ -124,5 +132,61 @@ export function usePanelMotion(ref: RefObject<HTMLElement | null>, { id, open, i
     // `id` and `onClosed` are read at the moment of opening or closing; only `open` starts a move.
   }, [open]);
 
-  return { x, y, clipPath, fade, shadow, scrim, box, sheet, fling };
+  // Dragging the sheet by its header. It follows the finger 1:1 from where it was
+  // grabbed, resists past the top, and on release goes where the flick was heading.
+  // Moves are followed on the window: a quick flick leaves the header before it counts as a drag.
+  const drag = useRef<Drag | null>(null);
+
+  const onMove = (event: PointerEvent) => {
+    const d = drag.current;
+    if (!d || d.pointer !== event.pointerId) return;
+    if (!d.moving) {
+      if (Math.abs(event.clientY - d.startY) < SLOP) return;
+      // From here it is a drag: track from this point, so the sheet doesn't jump by the slop.
+      d.moving = true;
+      d.startY = event.clientY;
+      y.stop();
+      d.from = y.get();
+      d.handle.setPointerCapture(event.pointerId);
+    }
+    const to = d.from + event.clientY - d.startY;
+    y.set(to < 0 ? rubberband(to, box.current.height) : to);
+    d.trail.push({ y: event.clientY, t: event.timeStamp });
+    while (d.trail.length > 2 && event.timeStamp - d.trail[0].t > 100) d.trail.shift();
+  };
+
+  const onEnd = (event: PointerEvent) => {
+    const d = drag.current;
+    if (!d || d.pointer !== event.pointerId) return;
+    drag.current = null;
+    removeEventListener('pointermove', onMove);
+    removeEventListener('pointerup', onEnd);
+    removeEventListener('pointercancel', onEnd);
+    if (!d.moving) return;
+    const cancelled = event.type === 'pointercancel';
+    // Speed over the last tenth of a second, in px/s.
+    const since = d.trail[0] ?? { y: event.clientY, t: event.timeStamp };
+    const elapsed = event.timeStamp - since.t;
+    const velocity = cancelled || elapsed <= 0 ? 0 : ((event.clientY - since.y) / elapsed) * 1000;
+    // Two places to rest, open and closed: take the one nearer where the flick would coast to.
+    const lands = y.get() + project(velocity);
+    if (!cancelled && lands > box.current.height / 2) {
+      fling.current = velocity;
+      onDismiss();
+    } else {
+      animate(y, 0, reducedMotion() ? CALM : { ...SETTLE, velocity });
+    }
+  };
+
+  const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+    if (!sheet.current || !open || event.button !== 0 || drag.current) return;
+    drag.current = { handle: event.currentTarget, pointer: event.pointerId, startY: event.clientY, from: y.get(), moving: false, trail: [] };
+    addEventListener('pointermove', onMove);
+    addEventListener('pointerup', onEnd);
+    addEventListener('pointercancel', onEnd);
+  };
+
+  const dragHandlers = { onPointerDown };
+
+  return { x, y, clipPath, fade, shadow, scrim, dragHandlers };
 }
