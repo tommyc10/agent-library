@@ -10,9 +10,11 @@ interface Props {
   title?: string;
   /** Lets a keyboard shortcut press this button. */
   shortcut?: boolean;
+  /** Opt out of press scaling in contexts where motion would distract. */
+  static?: boolean;
 }
 
-export function CopyButton({ text, label, variant = 'icon', title = 'Copy', shortcut }: Props) {
+export function CopyButton({ text, label, variant = 'icon', title = 'Copy', shortcut, static: isStatic }: Props) {
   const [copied, setCopied] = useState(false);
   const timer = useRef(0);
 
@@ -24,6 +26,7 @@ export function CopyButton({ text, label, variant = 'icon', title = 'Copy', shor
       className="lib-copy"
       data-variant={variant}
       data-copied={copied || undefined}
+      data-static={isStatic || undefined}
       data-shortcut={shortcut ? 'copy' : undefined}
       aria-label={label ? undefined : title}
       title={label ? undefined : title}

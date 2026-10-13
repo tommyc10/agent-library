@@ -22,12 +22,20 @@ export const rubberband = (overshoot: number, dimension: number, constant = 0.55
 /** Change the whole page at once and cross-fade it. Only the theme switch uses this: it has
  * no motion to interrupt, and colours can't be faded one by one. */
 export function transition(update: () => void, done?: () => void) {
+  const apply = () => {
+    const style = document.createElement('style');
+    style.textContent = '*,*::before,*::after{transition:none!important}';
+    document.head.append(style);
+    flushSync(update);
+    void document.body.offsetHeight;
+    requestAnimationFrame(() => requestAnimationFrame(() => style.remove()));
+  };
   if (!document.startViewTransition) {
-    update();
+    apply();
     done?.();
     return;
   }
-  const vt = document.startViewTransition(() => flushSync(update));
+  const vt = document.startViewTransition(apply);
   // A transition is skipped when the tab is hidden or another one starts; the update still lands.
   vt.ready.catch(() => {});
   vt.finished.catch(() => {}).finally(() => done?.());

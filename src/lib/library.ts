@@ -1,7 +1,12 @@
 import data from 'virtual:library';
 
 export type EntryType = 'skill' | 'prompt' | 'agent';
-export type PreviewKind = 'curve' | 'timeline' | 'spotlight' | 'scroll' | 'blocks' | 'phone';
+export type PreviewKind =
+  | 'curve' | 'review' | 'rank' | 'scan' | 'lookup' | 'press' | 'beam'
+  | 'scroll' | 'spotlight' | 'spotlight-lite'
+  | 'tween' | 'timeline' | 'trigger' | 'morph' | 'orbit' | 'stagger' | 'meter' | 'slider'
+  | 'form' | 'pick' | 'blocks' | 'variants' | 'poster'
+  | 'phone' | 'phone-tabs' | 'phone-swipe' | 'code';
 
 export interface Entry {
   id: string;

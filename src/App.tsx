@@ -1,9 +1,11 @@
-import { LayoutGrid, Moon, Search, Sun, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, LayoutGrid, Moon, Search, Sun, X } from 'lucide-react';
 import { AnimatePresence, motion, MotionConfig, type MotionStyle } from 'motion/react';
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react';
+import { Backdrop } from './components/Backdrop';
 import { leave, reflow, Tile, TYPE_ICON } from './components/Items';
 import { Panel } from './components/Panel';
 import { Roll } from './components/Roll';
+import { Tstack } from './components/Tstack';
 import { collections, displayName, entries, examples, getEntry, plural, search, TYPES, type Entry, type EntryType } from './lib/library';
 import { announce, reducedMotion, transition, typing } from './lib/motion';
 
@@ -18,6 +20,25 @@ const isTyping = (target: EventTarget | null) =>
   target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
 
 const count = (list: Entry[], type: EntryType) => list.filter((e) => e.type === type).length;
+
+/** How many tiles fit across the gallery, kept current as it is resized. It matches the
+ * grid in app.css: tiles at least 18.75rem wide with a 16px gap. */
+function useColumns(ref: RefObject<HTMLElement | null>) {
+  const [columns, setColumns] = useState(3);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      const tile = 18.75 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+      setColumns(Math.max(1, Math.floor((el.clientWidth + 16) / (tile + 16))));
+    };
+    measure();
+    const watch = new ResizeObserver(measure);
+    watch.observe(el);
+    return () => watch.disconnect();
+  }, [ref]);
+  return columns;
+}
 
 /** How many panel entries this tab has stacked on the history entry it opened from. */
 const depth = (): number => history.state?.depth ?? 0;
@@ -35,6 +56,12 @@ export function App() {
   const [active, setActive] = useState<string | null>(null);
   const [theme, setTheme] = useState(() => localStorage.getItem('library-theme') ?? 'dark');
   const searchRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  // The collections opened out to show everything in them. The rest show one row.
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
+  const columns = useColumns(bodyRef);
+  // One row of tiles; on a phone, where a row is one tile, two.
+  const preview = Math.max(columns, 2);
   // What had focus when the panel opened. The page behind goes inert, which drops focus,
   // so it has to be noted before that and handed back once the page is live again.
   const opener = useRef<HTMLElement | null>(null);
@@ -49,9 +76,15 @@ export function App() {
   const forTypes = matched.filter(inCollection);
   const forCollections = matched.filter(inType);
 
+  // Each collection shows its first row until it is opened, so the whole library fits in a
+  // few screens. Picking a collection in the rail shows all of that one.
   const sections = collections
-    .map((c) => ({ ...c, items: visible.filter((e) => e.collection === c.id) }))
-    .filter((s) => s.items.length > 0);
+    .map((c) => ({ ...c, all: visible.filter((e) => e.collection === c.id) }))
+    .filter((s) => s.all.length > 0)
+    .map((s) => {
+      const open = collection !== null || expanded.has(s.id);
+      return { ...s, open, folds: collection === null && s.all.length > preview, items: open ? s.all : s.all.slice(0, preview) };
+    });
 
   // The order the arrow keys walk in: top to bottom as drawn.
   const order = searching ? visible.map((e) => e.id) : sections.flatMap((s) => s.items.map((e) => e.id));
@@ -61,6 +94,27 @@ export function App() {
     typing.now = false;
     setActive(null);
     update();
+  };
+
+  const toggleSection = (id: string) =>
+    refilter(() =>
+      setExpanded((old) => {
+        const next = new Set(old);
+        if (!next.delete(id)) next.add(id);
+        return next;
+      }),
+    );
+
+  // The experimental section is only there when nothing is filtered, so clear the filters, then go.
+  const goExperimental = () => {
+    refilter(() => {
+      setQuery('');
+      setType('all');
+      setCollection(null);
+    });
+    requestAnimationFrame(() =>
+      document.getElementById('experimental')?.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' }),
+    );
   };
 
   const show = (id: string) => {
@@ -195,7 +249,7 @@ export function App() {
     <div className="lib">
       <aside className="lib-rail" inert={open !== null}>
         <div className="lib-brand">
-          <span className="lib-mark" aria-hidden />
+          <img className="lib-mark" src="./favicon.png" alt="" width={28} height={28} />
           <span>
             <strong>Library</strong>
             <small>Skills, prompts and agent files</small>
@@ -235,6 +289,11 @@ export function App() {
               <Roll value={forCollections.filter((e) => e.collection === c.id).length} />
             </button>
           ))}
+          <button type="button" className="lib-nav-item lib-nav-experimental" onClick={goExperimental}>
+            <span className="lib-dot" aria-hidden />
+            <span>Experimental</span>
+            <span className="lib-roll">1</span>
+          </button>
         </div>
 
         <div className="lib-rail-foot">
@@ -247,6 +306,8 @@ export function App() {
           </button>
         </div>
       </aside>
+
+      <Backdrop />
 
       <main className="lib-main" inert={open !== null}>
         <header className="lib-hero">
@@ -291,7 +352,7 @@ export function App() {
           </div>
         </header>
 
-        <div className="lib-body">
+        <div className="lib-body" ref={bodyRef}>
           <AnimatePresence mode="popLayout" initial={false} custom={typing.now}>
           {visible.length === 0 && (
             <motion.div key="empty" className="lib-empty" layout="position" transition={reflow()} exit="out" variants={leave}>
@@ -345,9 +406,16 @@ export function App() {
                   <span className="lib-section-n">{String(n + 1).padStart(2, '0')}</span>
                   <h2>{section.name}</h2>
                   <p>{section.description}</p>
-                  <span className="lib-section-count">
-                    <Roll value={section.items.length} />
-                  </span>
+                  {section.folds ? (
+                    <button type="button" className="lib-more" aria-expanded={section.open} onClick={() => toggleSection(section.id)}>
+                      {section.open ? 'Show fewer' : `Show all ${section.all.length}`}
+                      {section.open ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                    </button>
+                  ) : (
+                    <span className="lib-section-count">
+                      <Roll value={section.all.length} />
+                    </span>
+                  )}
                 </header>
                 <div className="lib-tiles">
                   <AnimatePresence mode="popLayout" initial={false} custom={typing.now}>
@@ -360,6 +428,19 @@ export function App() {
             ))}
           </AnimatePresence>
         </div>
+
+        {/* Not entries, so this is only there when the whole library is: no search, no filter. */}
+        {!searching && type === 'all' && !collection && (
+          <section id="experimental" className="lib-section lib-experimental" aria-labelledby="lib-experimental-title">
+            <header className="lib-section-head">
+              <span className="lib-section-n">X</span>
+              <h2 id="lib-experimental-title">Experimental</h2>
+              <p>Still in development. Expect rough edges and changes.</p>
+              <span className="lib-section-count">1</span>
+            </header>
+            <Tstack />
+          </section>
+        )}
       </main>
 
       <div id="lib-status" className="lib-status" role="status" />

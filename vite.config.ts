@@ -24,6 +24,16 @@ function markdownIn(dir: string) {
   return existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.md')).sort() : [];
 }
 
+function filesIn(dir: string, prefix = ''): string[] {
+  return readdirSync(dir, { withFileTypes: true })
+    .flatMap((item) => {
+      const name = prefix + item.name;
+      if (item.isDirectory()) return filesIn(join(dir, item.name), `${name}/`);
+      return item.isFile() ? [name] : [];
+    })
+    .sort();
+}
+
 /** Everything under content/ as one JSON module. The files are the library. */
 function collect() {
   const config = parse(readFileSync(join(CONTENT, 'library.yml'), 'utf8'));
@@ -35,7 +45,7 @@ function collect() {
     const { meta, body, raw } = readMarkdown(join(dir, 'SKILL.md'));
     const listed = existsSync(join(dir, 'files.json'))
       ? (JSON.parse(readFileSync(join(dir, 'files.json'), 'utf8')) as string[])
-      : markdownIn(dir);
+      : filesIn(dir);
     entries.push({
       id: `skill/${name}`,
       type: 'skill',
@@ -47,8 +57,8 @@ function collect() {
       body,
       raw,
       files: listed,
-      docs: markdownIn(dir)
-        .filter((f) => f !== 'SKILL.md')
+      docs: filesIn(dir)
+        .filter((f) => f.endsWith('.md') && f !== 'SKILL.md')
         .map((f) => ({ name: f, body: readFileSync(join(dir, f), 'utf8') })),
       ...config.skills?.[name],
     });

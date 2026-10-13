@@ -19,14 +19,25 @@ interface Props {
   source: string;
   /** The files a relative link can open. A link to anything else is shown as plain text. */
   localFiles?: string[];
+  currentFile?: string;
   /** Called with the target of a link that points at another file in the same folder. */
   onLocalLink?: (href: string) => void;
 }
 
 /** The file a relative link points at: `./RECIPES.md#springs` is `RECIPES.md`. */
-export const localTarget = (href: string) => href.replace(/^\.\//, '').split('#')[0];
+export const localTarget = (href: string, currentFile = '') => {
+  const target = href.split('#')[0];
+  if (!target) return currentFile;
+  const parts = currentFile.split('/').slice(0, -1);
+  for (const part of target.split('/')) {
+    if (!part || part === '.') continue;
+    if (part === '..') parts.pop();
+    else parts.push(part);
+  }
+  return parts.join('/');
+};
 
-export function Markdown({ source, localFiles, onLocalLink }: Props) {
+export function Markdown({ source, localFiles, currentFile, onLocalLink }: Props) {
   const files = localFiles?.join('\n') ?? '';
   const html = useMemo(() => {
     const page = document.createElement('template');
@@ -34,10 +45,10 @@ export function Markdown({ source, localFiles, onLocalLink }: Props) {
     const known = files.split('\n');
     for (const link of page.content.querySelectorAll('a')) {
       const href = link.getAttribute('href') ?? '';
-      if (!/^https?:/.test(href) && !known.includes(localTarget(href))) link.replaceWith(...link.childNodes);
+      if (!/^https?:/.test(href) && !known.includes(localTarget(href, currentFile))) link.replaceWith(...link.childNodes);
     }
     return page.innerHTML;
-  }, [source, files]);
+  }, [source, files, currentFile]);
 
   return (
     <div

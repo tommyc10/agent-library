@@ -33,33 +33,36 @@ examples:
   - hand a task to another agent
   - add a toast
 
-# Where each skill sits and which preview its tile draws.
-# Previews: curve, timeline, spotlight, scroll, blocks, phone.
+# Where each skill sits and which preview its tile draws. A skill with no preview gets `blocks`.
+# Previews, each drawn in src/styles/previews.css:
+#   curve, review, rank, scan, lookup, press, beam, scroll, spotlight, spotlight-lite,
+#   tween, timeline, trigger, morph, orbit, stagger, meter, slider, form, pick, blocks,
+#   variants, poster, phone, phone-tabs, phone-swipe, code.
 skills:
   animate: { collection: motion, preview: curve, tags: [build] }
-  review-animations: { collection: motion, preview: curve, tags: [review] }
-  improve-animations: { collection: motion, preview: curve, tags: [audit] }
-  find-animation-opportunities: { collection: motion, preview: curve, tags: [audit] }
-  animation-vocabulary: { collection: motion, preview: curve, tags: [reference] }
-  emil-design-eng: { collection: motion, preview: blocks, tags: [polish] }
+  review-animations: { collection: motion, preview: review, tags: [review] }
+  improve-animations: { collection: motion, preview: rank, tags: [audit] }
+  find-animation-opportunities: { collection: motion, preview: scan, tags: [audit] }
+  animation-vocabulary: { collection: motion, preview: lookup, tags: [reference] }
+  emil-design-eng: { collection: motion, preview: press, tags: [polish] }
   apple-design: { collection: motion, preview: phone, tags: [gestures, polish] }
-  libraries-dev: { collection: motion, preview: blocks, tags: [effects] }
+  libraries-dev: { collection: motion, preview: beam, tags: [effects] }
   scroll-story: { collection: stories, preview: scroll, tags: [authored, film] }
   tour: { collection: stories, preview: spotlight, tags: [authored, onboarding] }
-  tour-lite: { collection: stories, preview: spotlight, tags: [authored, onboarding] }
-  gsap-core: { collection: gsap, preview: timeline, tags: [reference] }
+  tour-lite: { collection: stories, preview: spotlight-lite, tags: [authored, onboarding] }
+  gsap-core: { collection: gsap, preview: tween, tags: [reference] }
   gsap-timeline: { collection: gsap, preview: timeline, tags: [reference] }
-  gsap-scrolltrigger: { collection: gsap, preview: scroll, tags: [reference] }
-  gsap-plugins: { collection: gsap, preview: timeline, tags: [reference] }
-  gsap-react: { collection: gsap, preview: timeline, tags: [reference] }
-  gsap-frameworks: { collection: gsap, preview: timeline, tags: [reference] }
-  gsap-performance: { collection: gsap, preview: timeline, tags: [reference] }
-  gsap-utils: { collection: gsap, preview: timeline, tags: [reference] }
-  shadcn: { collection: interface, preview: blocks, tags: [components] }
-  pick-ui-library: { collection: interface, preview: blocks, tags: [components] }
+  gsap-scrolltrigger: { collection: gsap, preview: trigger, tags: [reference] }
+  gsap-plugins: { collection: gsap, preview: morph, tags: [reference] }
+  gsap-react: { collection: gsap, preview: orbit, tags: [reference] }
+  gsap-frameworks: { collection: gsap, preview: stagger, tags: [reference] }
+  gsap-performance: { collection: gsap, preview: meter, tags: [reference] }
+  gsap-utils: { collection: gsap, preview: slider, tags: [reference] }
+  shadcn: { collection: interface, preview: form, tags: [components] }
+  pick-ui-library: { collection: interface, preview: pick, tags: [components] }
   ask-sonner: { collection: interface, preview: blocks, tags: [toasts] }
-  prototype: { collection: interface, preview: blocks, tags: [explore] }
-  poster-design-generation: { collection: interface, preview: blocks, tags: [images] }
-  mobile-native: { collection: native, preview: phone, tags: [web] }
-  animate-expo: { collection: native, preview: phone, tags: [build] }
-  write-swift: { collection: native, preview: phone, tags: [swift] }
+  prototype: { collection: interface, preview: variants, tags: [explore] }
+  poster-design-generation: { collection: interface, preview: poster, tags: [images] }
+  mobile-native: { collection: native, preview: phone-tabs, tags: [web] }
+  animate-expo: { collection: native, preview: phone-swipe, tags: [build] }
+  write-swift: { collection: native, preview: code, tags: [swift] }

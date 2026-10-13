@@ -16,9 +16,21 @@
   --fg-2: #a3a3a3;
   --fg-3: #8a8a8a;
   --green: #45c47a;
+  /* amber: experimental. No collection has it. */
+  --amber: #e0a93e;
+  --amber-wash: rgb(224 169 62 / 0.08);
+  --amber-line: rgb(224 169 62 / 0.32);
   --glass: rgba(16, 16, 16, 0.78);
   --glass-edge: rgba(255, 255, 255, 0.07);
   --card-edge: rgba(255, 255, 255, 0.03);
+  /* Midnight materials: a raised frame, a lit edge, then a recessed canvas.
+   * Dark depth comes from the surface ladder; light depth adds a soft shadow. */
+  --surface-card: linear-gradient(180deg, var(--l4), var(--l3));
+  --surface-raised: var(--l4);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-card-light: inset 0 1px 0 var(--glass-edge), inset 0 -1px 0 oklch(0 0 0 / 0.16);
+  --shadow-well: inset 0 0 0 1px var(--line), inset 0 2px 4px oklch(0 0 0 / 0.2);
   --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.6);
   --overlay: rgba(0, 0, 0, 0.5);
   --tint: rgba(255, 255, 255, 0.06);
@@ -28,10 +40,14 @@
   --primary-fg: #0a0a0a;
   --primary-hover: #e2e2e2;
 
-  /* colour: one lightness and strength for every hue, so no collection shouts */
-  --tone-l: 0.8;
+  /* colour: one lightness and strength for every hue, so no collection shouts.
+   * `tone` is the hue as text; `fill` is the hue as a shape, which can be stronger
+   * because nothing has to be read through it. */
+  --tone-l: 0.82;
   --tone-c: 0.12;
-  --glow: 0.16;
+  --fill-l: 0.76;
+  --fill-c: 0.16;
+  --well-tint: 20%;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -72,9 +88,24 @@
   --fg-2: #525252;
   --fg-3: #696969;
   --green: #14753a;
+  --amber: #9a5b00;
+  --amber-wash: rgb(212 148 15 / 0.1);
+  --amber-line: rgb(154 91 0 / 0.36);
   --glass: rgba(255, 255, 255, 0.8);
   --glass-edge: rgba(255, 255, 255, 0.9);
   --card-edge: rgba(255, 255, 255, 0.8);
+  --surface-card: linear-gradient(180deg, var(--l2), var(--l3));
+  --surface-raised: var(--l2);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06),
+    0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px 0 oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08),
+    0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 2px 4px 0 oklch(0 0 0 / 0.06);
+  --shadow-card-light: inset 0 1px 0 var(--card-edge);
+  --shadow-well: inset 0 0 0 1px var(--line), inset 0 2px 4px oklch(0 0 0 / 0.04);
   --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.16);
   --overlay: rgba(0, 0, 0, 0.2);
   --tint: rgba(0, 0, 0, 0.04);
@@ -84,8 +115,10 @@
   --primary-fg: #ffffff;
   --primary-hover: #333333;
   --tone-l: 0.47;
-  --tone-c: 0.16;
-  --glow: 0.1;
+  --tone-c: 0.17;
+  --fill-l: 0.64;
+  --fill-c: 0.19;
+  --well-tint: 13%;
   color-scheme: light;
 }
 
@@ -93,6 +126,8 @@
 @media (prefers-contrast: more) {
   :root {
     --line: rgba(255, 255, 255, 0.2);
+    --shadow-border: 0 0 0 1px var(--line);
+    --shadow-border-hover: 0 0 0 1px var(--line-2);
     --line-2: rgba(255, 255, 255, 0.28);
     --line-3: rgba(255, 255, 255, 0.4);
     --fg-2: #c4c4c4;
@@ -101,6 +136,8 @@
   }
   :root[data-theme='light'] {
     --line: rgba(0, 0, 0, 0.25);
+    --shadow-border: 0 0 0 1px var(--line);
+    --shadow-border-hover: 0 0 0 1px var(--line-2);
     --line-2: rgba(0, 0, 0, 0.35);
     --line-3: rgba(0, 0, 0, 0.5);
     --fg-2: #303030;
@@ -113,6 +150,10 @@
   --tone: oklch(var(--tone-l) var(--tone-c) var(--hue));
   --tone-wash: oklch(var(--tone-l) var(--tone-c) var(--hue) / 0.1);
   --tone-line: oklch(var(--tone-l) var(--tone-c) var(--hue) / 0.3);
+  --fill: oklch(var(--fill-l) var(--fill-c) var(--hue));
+  /* A well lit from above in its collection's colour. */
+  --preview-surface:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in oklch, var(--fill) var(--well-tint), var(--l1)), var(--l1) 85%);
 }
 
 *,

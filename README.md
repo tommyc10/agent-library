@@ -35,4 +35,4 @@ Quote any frontmatter value that contains a colon.
   `src/lib/panel-motion.ts` grows a tile into the detail panel on them. Both can be
   interrupted and reversed half way. On narrow screens the panel is a sheet you drag down
   by its header to put away.
-- `src/styles/previews.css` holds the six small drawings skill tiles can use.
+- `src/styles/previews.css` holds the small drawings skill tiles can use; `content/library.yml` lists them.

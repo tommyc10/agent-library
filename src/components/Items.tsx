@@ -17,6 +17,8 @@ export interface ItemProps {
   /** Position in its group, for the staggered arrival. */
   index: number;
   active: boolean;
+  /** Keep press feedback still when the surrounding context needs it. */
+  static?: boolean;
   onOpen: (id: string) => void;
   ref?: Ref<HTMLDivElement>;
 }
@@ -33,7 +35,7 @@ export const leave: Variants = {
 };
 
 /** One entry in the gallery: its picture, its name and what it is for. */
-export function Tile({ entry, index, active, onOpen, ref }: ItemProps) {
+export function Tile({ entry, index, active, static: isStatic, onOpen, ref }: ItemProps) {
   const Icon = TYPE_ICON[entry.type];
   return (
     <motion.div
@@ -46,6 +48,7 @@ export function Tile({ entry, index, active, onOpen, ref }: ItemProps) {
       style={{ '--hue': hueOf(entry), '--i': Math.min(index, 10) } as MotionStyle}
       data-entry={entry.id}
       data-active={active || undefined}
+      data-static={isStatic || undefined}
       data-still={useStill()}
     >
       <Drawing entry={entry} />

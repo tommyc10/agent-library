@@ -58,9 +58,10 @@ function Document({ files, path }: { files: { name: string; body: string }[]; pa
         <Markdown
           key={current.name}
           source={current.body.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '')}
+          currentFile={current.name}
           localFiles={files.map((f) => f.name)}
           onLocalLink={(href) => {
-            const next = files.findIndex((f) => f.name === localTarget(href));
+            const next = files.findIndex((f) => f.name === localTarget(href, current.name));
             if (next >= 0) setFile(next);
           }}
         />
