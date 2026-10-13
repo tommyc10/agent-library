@@ -89,6 +89,26 @@
   color-scheme: light;
 }
 
+/* More contrast: edges you can see and secondary text close to the main text. */
+@media (prefers-contrast: more) {
+  :root {
+    --line: rgba(255, 255, 255, 0.2);
+    --line-2: rgba(255, 255, 255, 0.28);
+    --line-3: rgba(255, 255, 255, 0.4);
+    --fg-2: #c4c4c4;
+    --fg-3: #b0b0b0;
+    --focus-ring: rgba(255, 255, 255, 0.85);
+  }
+  :root[data-theme='light'] {
+    --line: rgba(0, 0, 0, 0.25);
+    --line-2: rgba(0, 0, 0, 0.35);
+    --line-3: rgba(0, 0, 0, 0.5);
+    --fg-2: #303030;
+    --fg-3: #404040;
+    --focus-ring: rgba(0, 0, 0, 0.85);
+  }
+}
+
 .lib-hue {
   --tone: oklch(var(--tone-l) var(--tone-c) var(--hue));
   --tone-wash: oklch(var(--tone-l) var(--tone-c) var(--hue) / 0.1);

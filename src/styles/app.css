@@ -1204,3 +1204,15 @@
     animation: none !important;
   }
 }
+
+/* Less transparency, or more contrast: the glass surfaces turn solid. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .lib-search {
+    background: var(--l3);
+    backdrop-filter: none;
+  }
+  .lib-panel-head {
+    background: var(--l2);
+    backdrop-filter: none;
+  }
+}
