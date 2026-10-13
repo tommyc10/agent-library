@@ -1,0 +1,137 @@
+/* The four backgrounds. Each is one fixed layer behind the whole app (z-index -1 paints
+ * above the page colour and below everything else), and each owns its colour, so the
+ * app's own hero glow is switched off here. */
+
+.lib::before {
+  display: none;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ---------- 1. Scanline ---------- */
+
+.bg-scan {
+  --wash: 0.2;
+  --scan: rgba(0, 0, 0, 0.5);
+  background:
+    radial-gradient(40% 55% at 22% 0%, oklch(0.7 0.16 285 / var(--wash)), transparent 70%),
+    radial-gradient(36% 50% at 54% -6%, oklch(0.7 0.15 235 / var(--wash)), transparent 70%),
+    radial-gradient(30% 45% at 84% 6%, oklch(0.78 0.14 150 / calc(var(--wash) * 0.75)), transparent 70%),
+    radial-gradient(45% 50% at 60% 110%, oklch(0.65 0.16 15 / calc(var(--wash) * 0.7)), transparent 70%);
+}
+
+.bg-scan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, var(--scan) 0 1px, transparent 1px 3px);
+}
+
+:root[data-theme='light'] .bg-scan {
+  --wash: 0.14;
+  --scan: rgba(0, 0, 0, 0.045);
+}
+
+/* ---------- 2. Bayer ---------- */
+
+.bg-bayer {
+  width: 100vw;
+  height: 100vh;
+  image-rendering: pixelated;
+}
+
+/* ---------- 3. Grain ---------- */
+
+.bg-grain {
+  --wash: 0.13;
+  --ink: #fff;
+  --grain: 0.07;
+  background:
+    radial-gradient(60% 70% at 15% 0%, oklch(0.7 0.16 285 / var(--wash)), transparent 70%),
+    radial-gradient(55% 60% at 70% -10%, oklch(0.7 0.15 235 / var(--wash)), transparent 70%),
+    radial-gradient(50% 60% at 100% 60%, oklch(0.8 0.14 55 / calc(var(--wash) * 0.6)), transparent 70%),
+    radial-gradient(60% 60% at 30% 110%, oklch(0.78 0.14 150 / calc(var(--wash) * 0.6)), transparent 70%);
+}
+
+.bg-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  opacity: var(--grain);
+  /* fractal noise, turned into an alpha mask */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.4 0 0 0 -0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+    0 0 / 180px 180px repeat;
+}
+
+:root[data-theme='light'] .bg-grain {
+  --wash: 0.1;
+  --ink: #000;
+  --grain: 0.09;
+}
+
+/* ---------- 4. Dot matrix ---------- */
+
+.bg-dots {
+  --pitch: 7px;
+  --dot-ink: rgba(255, 255, 255, 0.045);
+  --blob: 0.55;
+}
+
+:root[data-theme='light'] .bg-dots {
+  --dot-ink: rgba(0, 0, 0, 0.06);
+  --blob: 0.4;
+}
+
+/* the grid itself, faint and everywhere */
+.bg-dots::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, var(--dot-ink) 1px, transparent 1.5px) 0 0 / var(--pitch) var(--pitch);
+}
+
+/* the same grid as a mask, so the drifting colour only lights dots */
+.bg-dots-field {
+  position: absolute;
+  inset: 0;
+  mask: radial-gradient(circle, #000 1px, transparent 1.5px) 0 0 / var(--pitch) var(--pitch);
+}
+
+.bg-dots-blob {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 70vmax;
+  height: 70vmax;
+  margin: -35vmax 0 0 -35vmax;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, oklch(0.74 0.15 var(--hue) / var(--blob)), transparent);
+  animation: bg-drift var(--dur) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.bg-dots-blob:nth-child(2) {
+  animation-direction: alternate-reverse;
+}
+
+@keyframes bg-drift {
+  from {
+    transform: translate3d(-6vw, -2vh, 0) scale(0.92);
+  }
+  to {
+    transform: translate3d(8vw, 6vh, 0) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-dots-blob {
+    animation: none;
+  }
+}
