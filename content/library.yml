@@ -1,0 +1,65 @@
+# Collections group entries on the page. `hue` is the colour angle (0 to 360) each one is drawn in.
+collections:
+  - id: motion
+    name: Motion
+    hue: 285
+    description: Decide what should move, build it, then review it.
+  - id: stories
+    name: Stories and tours
+    hue: 235
+    description: Scroll-driven product films and guided walkthroughs.
+  - id: gsap
+    name: GSAP
+    hue: 150
+    description: Reference for timelines, ScrollTrigger and plugins.
+  - id: interface
+    name: Interface
+    hue: 55
+    description: Components, libraries and layouts for building screens.
+  - id: native
+    name: Native
+    hue: 15
+    description: Swift, Expo and making the web feel right on a phone.
+  - id: working
+    name: Ways of working
+    hue: 195
+    description: Prompts and agent files that shape how an agent behaves in a repo.
+
+# Shown under the search field. Clicking one runs it.
+examples:
+  - walk new users through the UI
+  - make this feel less janky
+  - show how an order moves through our services
+  - hand a task to another agent
+  - add a toast
+
+# Where each skill sits and which preview its tile draws.
+# Previews: curve, timeline, spotlight, scroll, blocks, phone.
+skills:
+  animate: { collection: motion, preview: curve, tags: [build] }
+  review-animations: { collection: motion, preview: curve, tags: [review] }
+  improve-animations: { collection: motion, preview: curve, tags: [audit] }
+  find-animation-opportunities: { collection: motion, preview: curve, tags: [audit] }
+  animation-vocabulary: { collection: motion, preview: curve, tags: [reference] }
+  emil-design-eng: { collection: motion, preview: blocks, tags: [polish] }
+  apple-design: { collection: motion, preview: phone, tags: [gestures, polish] }
+  libraries-dev: { collection: motion, preview: blocks, tags: [effects] }
+  scroll-story: { collection: stories, preview: scroll, tags: [authored, film] }
+  tour: { collection: stories, preview: spotlight, tags: [authored, onboarding] }
+  tour-lite: { collection: stories, preview: spotlight, tags: [authored, onboarding] }
+  gsap-core: { collection: gsap, preview: timeline, tags: [reference] }
+  gsap-timeline: { collection: gsap, preview: timeline, tags: [reference] }
+  gsap-scrolltrigger: { collection: gsap, preview: scroll, tags: [reference] }
+  gsap-plugins: { collection: gsap, preview: timeline, tags: [reference] }
+  gsap-react: { collection: gsap, preview: timeline, tags: [reference] }
+  gsap-frameworks: { collection: gsap, preview: timeline, tags: [reference] }
+  gsap-performance: { collection: gsap, preview: timeline, tags: [reference] }
+  gsap-utils: { collection: gsap, preview: timeline, tags: [reference] }
+  shadcn: { collection: interface, preview: blocks, tags: [components] }
+  pick-ui-library: { collection: interface, preview: blocks, tags: [components] }
+  ask-sonner: { collection: interface, preview: blocks, tags: [toasts] }
+  prototype: { collection: interface, preview: blocks, tags: [explore] }
+  poster-design-generation: { collection: interface, preview: blocks, tags: [images] }
+  mobile-native: { collection: native, preview: phone, tags: [web] }
+  animate-expo: { collection: native, preview: phone, tags: [build] }
+  write-swift: { collection: native, preview: phone, tags: [swift] }

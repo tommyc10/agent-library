@@ -1,0 +1,219 @@
+/* The drawing at the top of a skill tile. Each one is a few divs.
+ * They rest until the tile is hovered, focused or reached with the arrow keys.
+ * `.lib-draw` in app.css sets how large one is drawn. */
+
+.lib-pv {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 92px;
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--tone) 7%, var(--l1));
+  box-shadow: inset 0 0 0 1px var(--line);
+  overflow: hidden;
+}
+
+.lib-pv * {
+  animation-play-state: paused;
+}
+
+.lib-tile:is(:hover, :focus-within, [data-active]) .lib-pv * {
+  animation-play-state: running;
+}
+
+.lib-pv i,
+.lib-pv b {
+  position: absolute;
+  display: block;
+}
+
+/* curve: a dot rides an easing curve */
+.lib-pv-curve {
+  position: relative;
+  width: 160px;
+  height: 64px;
+}
+.lib-pv-curve svg {
+  position: absolute;
+  inset: 0;
+}
+.lib-pv-curve path {
+  stroke: var(--tone-line);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.lib-pv-curve i {
+  top: 0;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--tone);
+  box-shadow: 0 0 0 4px var(--tone-wash);
+  offset-path: path('M8 56 C 52 56, 44 8, 152 8');
+  offset-rotate: 0deg;
+  animation: lib-pv-travel 1.5s var(--ease-in-out) infinite alternate;
+}
+@keyframes lib-pv-travel {
+  to {
+    offset-distance: 100%;
+  }
+}
+
+/* timeline: staggered tracks under a playhead */
+.lib-pv-timeline {
+  position: relative;
+  width: 150px;
+  height: 50px;
+}
+.lib-pv-timeline i {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--tone);
+  animation: lib-pv-nudge 1.8s var(--ease-in-out) infinite alternate;
+}
+.lib-pv-timeline i:nth-child(1) { top: 0; left: 0; width: 42%; opacity: 0.9; }
+.lib-pv-timeline i:nth-child(2) { top: 14px; left: 16%; width: 46%; opacity: 0.55; animation-delay: -0.3s; }
+.lib-pv-timeline i:nth-child(3) { top: 28px; left: 38%; width: 40%; opacity: 0.35; animation-delay: -0.6s; }
+.lib-pv-timeline i:nth-child(4) { top: 42px; left: 62%; width: 30%; opacity: 0.2; animation-delay: -0.9s; }
+.lib-pv-timeline b {
+  top: -8px;
+  bottom: -8px;
+  left: 0;
+  width: 1.5px;
+  background: var(--fg);
+  opacity: 0.7;
+  animation: lib-pv-sweep 2.4s linear infinite alternate;
+}
+@keyframes lib-pv-nudge {
+  from { transform: translateX(-6px); }
+  to { transform: translateX(8px); }
+}
+@keyframes lib-pv-sweep {
+  to { transform: translateX(150px); }
+}
+
+/* spotlight: a ring glides between parts of a page */
+.lib-pv-spotlight {
+  position: relative;
+  width: 150px;
+  height: 60px;
+}
+.lib-pv-spotlight i {
+  border-radius: 4px;
+  background: var(--tint);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.lib-pv-spotlight i:nth-child(1) { top: 0; left: 0; width: 56px; height: 20px; }
+.lib-pv-spotlight i:nth-child(2) { top: 0; left: 66px; width: 84px; height: 20px; }
+.lib-pv-spotlight i:nth-child(3) { top: 30px; left: 0; width: 150px; height: 30px; }
+.lib-pv-spotlight b {
+  top: -4px;
+  left: -4px;
+  width: 64px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1.5px solid var(--tone);
+  box-shadow: 0 0 0 200px rgb(0 0 0 / 0.28);
+  animation: lib-pv-spot 4.2s var(--ease-in-out) infinite;
+}
+@keyframes lib-pv-spot {
+  0%, 22% { top: -4px; left: -4px; width: 64px; height: 28px; }
+  33%, 55% { top: -4px; left: 62px; width: 92px; height: 28px; }
+  66%, 88% { top: 26px; left: -4px; width: 158px; height: 38px; }
+}
+
+/* scroll: screens pass a tilted camera */
+.lib-pv-scroll {
+  position: relative;
+  width: 104px;
+  height: 92px;
+  transform: perspective(300px) rotateX(50deg) rotateZ(-8deg);
+}
+.lib-pv-scroll i {
+  left: 0;
+  width: 104px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--l4);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  animation: lib-pv-scroll 2.6s var(--ease-in-out) infinite alternate;
+}
+.lib-pv-scroll i::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--tone);
+}
+.lib-pv-scroll i:nth-child(1) { top: -30px; opacity: 0.5; }
+.lib-pv-scroll i:nth-child(2) { top: 24px; }
+.lib-pv-scroll i:nth-child(3) { top: 78px; opacity: 0.7; }
+@keyframes lib-pv-scroll {
+  to { transform: translateY(-54px); }
+}
+
+/* blocks: a small layout, and something arriving in it */
+.lib-pv-blocks {
+  position: relative;
+  width: 150px;
+  height: 60px;
+}
+.lib-pv-blocks i {
+  border-radius: 4px;
+  background: var(--tint);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.lib-pv-blocks i:nth-child(1) { top: 0; left: 0; width: 150px; height: 9px; }
+.lib-pv-blocks i:nth-child(2) { top: 17px; left: 0; width: 70px; height: 43px; }
+.lib-pv-blocks i:nth-child(3) { top: 17px; left: 80px; width: 70px; height: 43px; }
+.lib-pv-blocks b {
+  right: 6px;
+  bottom: 6px;
+  width: 58px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--tone);
+  animation: lib-pv-toast 2.2s var(--ease-out) infinite;
+}
+@keyframes lib-pv-toast {
+  0% { transform: translateY(26px) scale(0.96); opacity: 0; }
+  22%, 78% { transform: none; opacity: 1; }
+  100% { transform: translateY(26px) scale(0.96); opacity: 0; }
+}
+
+/* phone: a sheet comes up */
+.lib-pv-phone {
+  position: relative;
+  width: 46px;
+  height: 78px;
+  border-radius: 10px;
+  background: var(--l2);
+  box-shadow: inset 0 0 0 1.5px var(--line-3);
+  overflow: hidden;
+}
+.lib-pv-phone i {
+  top: 6px;
+  left: 16px;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line-3);
+}
+.lib-pv-phone b {
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  height: 42px;
+  border-radius: 7px 7px 8px 8px;
+  background: var(--tone);
+  opacity: 0.85;
+  transform: translateY(30px);
+  animation: lib-pv-sheet 1.7s var(--ease-drawer) infinite alternate;
+}
+@keyframes lib-pv-sheet {
+  to { transform: none; }
+}
