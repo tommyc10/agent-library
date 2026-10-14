@@ -25,7 +25,6 @@ const DRAWINGS: Record<PreviewKind, { box: string; i: number; b: number; variant
   pick: { box: 'pick', i: 3, b: 1 },
   blocks: { box: 'blocks', i: 3, b: 1 },
   variants: { box: 'variants', i: 3, b: 3 },
-  poster: { box: 'poster', i: 1, b: 3 },
   phone: { box: 'phone', i: 1, b: 1 },
   'phone-tabs': { box: 'phone', i: 1, b: 4, variant: 'tabs' },
   'phone-swipe': { box: 'phone', i: 1, b: 2, variant: 'swipe' },

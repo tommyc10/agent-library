@@ -1,6 +1,6 @@
 import DOMPurify from 'dompurify';
 import { Marked } from 'marked';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { copyText } from '../lib/motion';
 
 const escape = (text: string) =>
@@ -10,7 +10,7 @@ const marked = new Marked({
   gfm: true,
   renderer: {
     code({ text }) {
-      return `<div class="lib-code"><button type="button" class="lib-code-copy" data-copy>Copy</button><pre><code>${escape(text)}</code></pre></div>`;
+      return `<div class="lib-code"><button type="button" class="lib-code-copy" data-copy aria-label="Copy code">Copy</button><pre><code>${escape(text)}</code></pre></div>`;
     },
   },
 });
@@ -50,8 +50,38 @@ export function Markdown({ source, localFiles, currentFile, onLocalLink }: Props
     return page.innerHTML;
   }, [source, files, currentFile]);
 
+  // A code block or table wider than the panel scrolls sideways. Let the keyboard reach it
+  // while it does, and leave it out of the tab order while it doesn't.
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const mark = () => {
+      // Numbered, so each region has a name of its own.
+      const counts = { PRE: 0, TABLE: 0 };
+      for (const area of el.querySelectorAll<HTMLElement>('.lib-code pre, table')) {
+        const kind = area.tagName as keyof typeof counts;
+        const scrolls = area.scrollWidth > area.clientWidth;
+        if (scrolls) {
+          area.tabIndex = 0;
+          area.setAttribute('role', 'region');
+          area.setAttribute('aria-label', `${kind === 'PRE' ? 'Code example' : 'Table'} ${++counts[kind]}`);
+        } else {
+          area.removeAttribute('tabindex');
+          area.removeAttribute('role');
+          area.removeAttribute('aria-label');
+        }
+      }
+    };
+    mark();
+    const watch = new ResizeObserver(mark);
+    watch.observe(el);
+    return () => watch.disconnect();
+  }, [html]);
+
   return (
     <div
+      ref={root}
       className="lib-md"
       dangerouslySetInnerHTML={{ __html: html }}
       onClick={(event) => {

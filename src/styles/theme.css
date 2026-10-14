@@ -32,6 +32,7 @@
   --shadow-card-light: inset 0 1px 0 var(--glass-edge), inset 0 -1px 0 oklch(0 0 0 / 0.16);
   --shadow-well: inset 0 0 0 1px var(--line), inset 0 2px 4px oklch(0 0 0 / 0.2);
   --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --shadow-lift: 0 18px 48px -12px rgb(0 0 0 / 0.55);
   --overlay: rgba(0, 0, 0, 0.5);
   --tint: rgba(255, 255, 255, 0.06);
   --focus-ring: rgba(255, 255, 255, 0.45);
@@ -107,6 +108,7 @@
   --shadow-card-light: inset 0 1px 0 var(--card-edge);
   --shadow-well: inset 0 0 0 1px var(--line), inset 0 2px 4px oklch(0 0 0 / 0.04);
   --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.16);
+  --shadow-lift: 0 18px 48px -12px rgb(0 0 0 / 0.18);
   --overlay: rgba(0, 0, 0, 0.2);
   --tint: rgba(0, 0, 0, 0.04);
   --focus-ring: rgba(0, 0, 0, 0.6);

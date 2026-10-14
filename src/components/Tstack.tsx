@@ -20,11 +20,11 @@ export function Tstack() {
     <article className="lib-tstack-card" aria-labelledby="lib-tstack-title">
       <div className="lib-tstack-hatch" aria-hidden />
       <div className="lib-tstack-notice">
-        <span className="lib-tstack-name">
-          <strong id="lib-tstack-title">TSTACK</strong>
+        <div className="lib-tstack-name">
+          <h3 id="lib-tstack-title">TSTACK</h3>
           <span className="lib-tstack-pill">In development</span>
-        </span>
-        <h3>Engineering workflows for Claude Code and GitHub Copilot.</h3>
+        </div>
+        <p className="lib-tstack-lead">Engineering workflows for Claude Code and GitHub Copilot.</p>
         <p>
           Describe a goal to <code>tstack-mode</code>. It picks a playbook, and the agent has to reproduce, design, verify and show
           evidence before it reports the work as done. TSTACK is a port of pstack and still in development: steps and commands may

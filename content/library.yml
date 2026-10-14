@@ -37,7 +37,7 @@ examples:
 # Previews, each drawn in src/styles/previews.css:
 #   curve, review, rank, scan, lookup, press, beam, scroll, spotlight, spotlight-lite,
 #   tween, timeline, trigger, morph, orbit, stagger, meter, slider, form, pick, blocks,
-#   variants, poster, phone, phone-tabs, phone-swipe, code.
+#   variants, phone, phone-tabs, phone-swipe, code.
 skills:
   animate: { collection: motion, preview: curve, tags: [build] }
   review-animations: { collection: motion, preview: review, tags: [review] }
@@ -62,7 +62,6 @@ skills:
   pick-ui-library: { collection: interface, preview: pick, tags: [components] }
   ask-sonner: { collection: interface, preview: blocks, tags: [toasts] }
   prototype: { collection: interface, preview: variants, tags: [explore] }
-  poster-design-generation: { collection: interface, preview: poster, tags: [images] }
   mobile-native: { collection: native, preview: phone-tabs, tags: [web] }
   animate-expo: { collection: native, preview: phone-swipe, tags: [build] }
   write-swift: { collection: native, preview: code, tags: [swift] }

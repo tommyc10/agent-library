@@ -5,7 +5,7 @@ export type PreviewKind =
   | 'curve' | 'review' | 'rank' | 'scan' | 'lookup' | 'press' | 'beam'
   | 'scroll' | 'spotlight' | 'spotlight-lite'
   | 'tween' | 'timeline' | 'trigger' | 'morph' | 'orbit' | 'stagger' | 'meter' | 'slider'
-  | 'form' | 'pick' | 'blocks' | 'variants' | 'poster'
+  | 'form' | 'pick' | 'blocks' | 'variants'
   | 'phone' | 'phone-tabs' | 'phone-swipe' | 'code';
 
 export interface Entry {

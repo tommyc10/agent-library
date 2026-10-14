@@ -417,6 +417,10 @@ a.lib-btn {
   margin-top: auto;
   padding: 12px 4px 0 8px;
 }
+.lib-rail-tools {
+  display: flex;
+  gap: 2px;
+}
 .lib-keys {
   display: flex;
   align-items: center;
@@ -470,32 +474,28 @@ a.lib-btn {
   box-shadow: inset 0 1px 0 var(--glass-edge), inset 0 0 0 1px var(--line-2);
   color: var(--fg-3);
   cursor: text;
-  transition: box-shadow 150ms var(--ease-out);
+  transition: background-color 200ms ease-out, box-shadow 200ms ease-out, translate 200ms ease-out;
 }
-/* On focus the edge picks up the collection colours. */
-.lib-search::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(
-    100deg,
-    oklch(0.74 0.15 285),
-    oklch(0.74 0.14 235),
-    oklch(0.8 0.13 150),
-    oklch(0.83 0.13 55)
-  );
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  opacity: 0;
-  transition: opacity 200ms var(--ease-out);
-  pointer-events: none;
-}
+/* On focus the field rises off the page: it turns solid, takes a deep shadow and a ring in
+ * the focus colour, and the examples under it step back so it is the one thing lit. */
 .lib-search:focus-within {
-  box-shadow: inset 0 1px 0 var(--glass-edge), inset 0 0 0 1px var(--line-2), 0 0 0 2px var(--focus-ring);
+  background: var(--surface-raised);
+  box-shadow:
+    inset 0 1px 0 var(--glass-edge),
+    inset 0 0 0 1px var(--focus-ring),
+    var(--shadow-lift),
+    0 0 0 1px var(--line-2);
 }
-.lib-search:focus-within::before {
-  opacity: 0.8;
+@media (prefers-reduced-motion: no-preference) {
+  .lib-search:focus-within {
+    translate: 0 -2px;
+  }
+}
+.lib-examples {
+  transition: opacity 200ms ease-out;
+}
+.lib-hero:has(.lib-search:focus-within) .lib-examples {
+  opacity: 0.55;
 }
 .lib-search input {
   flex: 1;
@@ -796,7 +796,7 @@ a.lib-btn {
   align-items: center;
   gap: 10px;
 }
-.lib-tstack-name strong {
+.lib-tstack-name h3 {
   font: 500 var(--text-base) / 1 var(--mono);
   letter-spacing: -0.01em;
 }
@@ -838,8 +838,9 @@ a.lib-btn {
   gap: 14px;
   padding: 30px 32px 28px;
 }
-.lib-tstack-notice h3 {
+.lib-tstack-notice .lib-tstack-lead {
   max-width: 20ch;
+  color: var(--fg);
   font-size: var(--text-3xl);
   font-weight: 600;
   line-height: 1.08;
@@ -1144,6 +1145,9 @@ a.lib-btn {
   border-radius: 5px;
   background: var(--tone-wash);
   color: var(--tone);
+  /* Not colour alone: the underline marks a blank in every theme and in forced colours. */
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   cursor: text;
@@ -1520,7 +1524,10 @@ a.lib-btn {
 .lib-example,
 .lib-more,
 .lib-code-copy,
-.lib-tile-name {
+.lib-tile-name,
+.lib-nav-item,
+.lib-link-row,
+.lib-seg button {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1559,9 +1566,15 @@ a.lib-btn {
 /* Forced colours drop every box-shadow, and most edges here are drawn with one.
  * Give the controls and wells a real edge there. */
 @media (forced-colors: active) {
-  :is(.lib-kbd, .lib-badge, .lib-tstack-pill, .lib-more, .lib-btn, .lib-seg, .lib-seg button[aria-pressed='true'], .lib-nav-pill, .lib-search, .lib-example, .lib-code-copy, .lib-pv, .lib-draw-text):not(:focus-visible) {
+  :where(.lib-kbd, .lib-badge, .lib-tstack-pill, .lib-more, .lib-btn, .lib-seg, .lib-seg button[aria-pressed='true'], .lib-nav-pill, .lib-search, .lib-example, .lib-code-copy, .lib-pv, .lib-draw-text):not(:focus-visible) {
     outline: 1px solid CanvasText;
     outline-offset: -1px;
+  }
+  /* These draw their focus with box-shadow, which forced colours removes. */
+  .lib-search:focus-within,
+  .lib-blank:focus {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
   }
   .lib-backdrop {
     display: none;

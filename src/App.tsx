@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, LayoutGrid, Moon, Search, Sun, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, LayoutGrid, Moon, Pause, Play, Search, Sun, X } from 'lucide-react';
 import { AnimatePresence, motion, MotionConfig, type MotionStyle } from 'motion/react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react';
 import { Backdrop } from './components/Backdrop';
@@ -20,6 +20,13 @@ const isTyping = (target: EventTarget | null) =>
   target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
 
 const count = (list: Entry[], type: EntryType) => list.filter((e) => e.type === type).length;
+
+/** The search shortcut as this keyboard writes it. Both ⌘K and Ctrl+K work everywhere. */
+const SEARCH_KEY = /mac|iphone|ipad/i.test(
+  (navigator as Navigator & { userAgentData?: { platform: string } }).userAgentData?.platform || navigator.platform,
+)
+  ? '⌘K'
+  : 'Ctrl K';
 
 /** How many tiles fit across the gallery, kept current as it is resized. It matches the
  * grid in app.css: tiles at least 18.75rem wide with a 16px gap. */
@@ -55,6 +62,8 @@ export function App() {
   const linked = useRef(open !== null);
   const [active, setActive] = useState<string | null>(null);
   const [theme, setTheme] = useState(() => localStorage.getItem('library-theme') ?? 'dark');
+  // The skill drawings loop while on screen; this stops them, and the choice is kept.
+  const [still, setStill] = useState(() => localStorage.getItem('library-still') === 'true');
   const searchRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   // The collections opened out to show everything in them. The rest show one row.
@@ -118,7 +127,15 @@ export function App() {
   };
 
   const show = (id: string) => {
-    if (!open) opener.current = document.activeElement as HTMLElement | null;
+    if (!open) {
+      // Safari doesn't focus a button when it is clicked, so fall back to the tile's own
+      // button: that is where focus goes back to when the panel closes.
+      const focused = document.activeElement;
+      opener.current =
+        focused instanceof HTMLElement && focused !== document.body
+          ? focused
+          : document.querySelector<HTMLElement>(`[data-entry="${id}"] .lib-tile-name`);
+    }
     linked.current = false;
     setOpen(id);
     setShown(id);
@@ -154,6 +171,11 @@ export function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.toggleAttribute('data-still', still);
+    localStorage.setItem('library-still', String(still));
+  }, [still]);
 
   useEffect(() => {
     const onPop = () => {
@@ -298,12 +320,24 @@ export function App() {
 
         <div className="lib-rail-foot">
           <span className="lib-keys">
-            <kbd className="lib-kbd">⌘K</kbd> search
+            <kbd className="lib-kbd">{SEARCH_KEY}</kbd> search
             <kbd className="lib-kbd">C</kbd> copy
           </span>
-          <button type="button" className="lib-icon-btn" onClick={toggleTheme} aria-label="Switch theme" title="Switch theme">
-            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
+          <span className="lib-rail-tools">
+            <button
+              type="button"
+              className="lib-icon-btn"
+              onClick={() => setStill((s) => !s)}
+              aria-pressed={still}
+              aria-label="Pause animations"
+              title={still ? 'Play animations' : 'Pause animations'}
+            >
+              {still ? <Play size={15} /> : <Pause size={15} />}
+            </button>
+            <button type="button" className="lib-icon-btn" onClick={toggleTheme} aria-label="Switch theme" title="Switch theme">
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+          </span>
         </div>
       </aside>
 
@@ -338,7 +372,7 @@ export function App() {
                 <X size={15} />
               </button>
             ) : (
-              <kbd className="lib-kbd">⌘K</kbd>
+              <kbd className="lib-kbd">{SEARCH_KEY}</kbd>
             )}
           </label>
 
@@ -356,7 +390,7 @@ export function App() {
           <AnimatePresence mode="popLayout" initial={false} custom={typing.now}>
           {visible.length === 0 && (
             <motion.div key="empty" className="lib-empty" layout="position" transition={reflow()} exit="out" variants={leave}>
-              <p>Nothing here matches that.</p>
+              <p>{searching ? `No matches for “${query.trim()}”.` : 'Nothing matches these filters.'}</p>
               <button
                 type="button"
                 className="lib-btn"
@@ -368,7 +402,7 @@ export function App() {
                   })
                 }
               >
-                Show everything
+                {searching ? 'Clear search and filters' : 'Clear filters'}
               </button>
             </motion.div>
           )}
