@@ -1,7 +1,7 @@
-import { Link2, X } from 'lucide-react';
+import { ArrowUpRight, Link2, X } from 'lucide-react';
 import { motion, type MotionStyle } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { chainsWith, displayName, entries, getCollection, getEntry, hueOf, TYPES, type Entry } from '../lib/library';
+import { chainsWith, displayName, entries, getCollection, getEntry, hueOf, installCommand, sourceUrl, TYPES, type Entry } from '../lib/library';
 import { usePanelMotion } from '../lib/panel-motion';
 import { ChainCard } from './Chains';
 import { CopyButton } from './CopyButton';
@@ -83,6 +83,26 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
 
   return (
     <>
+      {entry.source && (
+        <section className="lib-block">
+          <h3 className="lib-label">Install it</h3>
+          <div className="lib-calls">
+            <div className="lib-call">
+              <span className="lib-call-where">Terminal</span>
+              <code>{installCommand(entry.source, entry.name)}</code>
+              <CopyButton text={installCommand(entry.source, entry.name)} title="Copy install command" />
+            </div>
+            <div className="lib-call">
+              <span className="lib-call-where">From</span>
+              <a href={sourceUrl(entry.source, entry.name)} target="_blank" rel="noreferrer">
+                {entry.source}
+                <ArrowUpRight size={12} />
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="lib-block">
         <h3 className="lib-label">Call it</h3>
         <div className="lib-calls">

@@ -1208,8 +1208,23 @@ a.lib-btn {
   color: var(--fg-3);
 }
 .lib-call code {
-  font: 400 var(--text-xs)/1 var(--mono);
+  padding-block: 8px;
+  font: 400 var(--text-xs)/1.5 var(--mono);
   color: var(--tone);
+  overflow-wrap: anywhere;
+}
+.lib-call a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-self: start;
+  font-size: var(--text-xs);
+  color: var(--fg-2);
+  text-underline-offset: 3px;
+}
+.lib-call a:hover {
+  color: var(--tone);
+  text-decoration: underline;
 }
 
 .lib-links {

@@ -1,7 +1,7 @@
 import { FileText, MessageSquareText, Zap } from 'lucide-react';
 import { motion, type MotionStyle, type Variants } from 'motion/react';
 import type { Ref } from 'react';
-import { displayName, fillPrompt, hueOf, TYPES, type Entry, type EntryType } from '../lib/library';
+import { displayName, fillPrompt, hueOf, installCommand, TYPES, type Entry, type EntryType } from '../lib/library';
 import { spring, typing, useStill } from '../lib/motion';
 import { CopyButton } from './CopyButton';
 import { Drawing } from './Preview';
@@ -67,6 +67,9 @@ export function Tile({ entry, index, active, static: isStatic, onOpen, ref }: It
           text={() => (entry.type === 'prompt' ? fillPrompt(entry.body) : entry.raw)}
           title={entry.type === 'prompt' ? 'Copy prompt' : 'Copy file'}
         />
+      )}
+      {entry.type === 'skill' && entry.source && (
+        <CopyButton text={installCommand(entry.source, entry.name)} title="Copy install command" />
       )}
     </motion.div>
   );

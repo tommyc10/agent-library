@@ -45,49 +45,49 @@ examples:
 #   tween, timeline, trigger, morph, orbit, stagger, meter, slider, form, pick, blocks,
 #   variants, phone, phone-tabs, phone-swipe, code.
 skills:
-  animate: { collection: motion, preview: curve, tags: [build] }
-  review-animations: { collection: motion, preview: review, tags: [review] }
-  improve-animations: { collection: motion, preview: rank, tags: [audit] }
-  find-animation-opportunities: { collection: motion, preview: scan, tags: [audit] }
-  animation-vocabulary: { collection: motion, preview: lookup, tags: [reference] }
-  emil-design-eng: { collection: motion, preview: press, tags: [polish] }
-  apple-design: { collection: motion, preview: phone, tags: [gestures, polish] }
-  libraries-dev: { collection: motion, preview: beam, tags: [effects] }
-  animation-performance: { collection: motion, preview: meter, tags: [performance, jank] }
-  transitions-dev: { collection: motion, preview: morph, tags: [build, css] }
-  transitions-polish: { collection: motion, preview: curve, tags: [polish, timing] }
+  animate: { collection: motion, preview: curve, tags: [build], source: emilkowalski/skills }
+  review-animations: { collection: motion, preview: review, tags: [review], source: emilkowalski/skills }
+  improve-animations: { collection: motion, preview: rank, tags: [audit], source: emilkowalski/skills }
+  find-animation-opportunities: { collection: motion, preview: scan, tags: [audit], source: emilkowalski/skills }
+  animation-vocabulary: { collection: motion, preview: lookup, tags: [reference], source: emilkowalski/skills }
+  emil-design-eng: { collection: motion, preview: press, tags: [polish], source: emilkowalski/skills }
+  apple-design: { collection: motion, preview: phone, tags: [gestures, polish], source: emilkowalski/skills }
+  libraries-dev: { collection: motion, preview: beam, tags: [effects], source: jakubantalik/libraries.dev }
+  animation-performance: { collection: motion, preview: meter, tags: [performance, jank], source: emilkowalski/skills }
+  transitions-dev: { collection: motion, preview: morph, tags: [build, css], source: Jakubantalik/transitions.dev }
+  transitions-polish: { collection: motion, preview: curve, tags: [polish, timing], source: Jakubantalik/transitions.dev }
   scroll-story: { collection: stories, preview: scroll, tags: [authored, film] }
   tour: { collection: stories, preview: spotlight, tags: [authored, onboarding] }
   tour-lite: { collection: stories, preview: spotlight-lite, tags: [authored, onboarding] }
-  gsap-core: { collection: gsap, preview: tween, tags: [reference] }
-  gsap-timeline: { collection: gsap, preview: timeline, tags: [reference] }
-  gsap-scrolltrigger: { collection: gsap, preview: trigger, tags: [reference] }
-  gsap-plugins: { collection: gsap, preview: morph, tags: [reference] }
-  gsap-react: { collection: gsap, preview: orbit, tags: [reference] }
-  gsap-frameworks: { collection: gsap, preview: stagger, tags: [reference] }
-  gsap-performance: { collection: gsap, preview: meter, tags: [reference] }
-  gsap-utils: { collection: gsap, preview: slider, tags: [reference] }
-  shadcn: { collection: interface, preview: form, tags: [components] }
-  pick-ui-library: { collection: interface, preview: pick, tags: [components] }
-  ask-sonner: { collection: interface, preview: blocks, tags: [toasts] }
-  prototype: { collection: interface, preview: variants, tags: [explore] }
-  variant: { collection: interface, preview: variants, tags: [explore] }
-  state-machine: { collection: interface, preview: phone-tabs, tags: [states, mock data] }
-  build-design: { collection: interface, preview: form, tags: [figma, build] }
-  explain-interface: { collection: interface, preview: lookup, tags: [reference, inspect] }
-  better-interface: { collection: quality, preview: review, tags: [review] }
-  interface-review: { collection: quality, preview: review, tags: [review, diff] }
-  better-accessibility: { collection: quality, preview: scan, tags: [accessibility, wcag] }
-  better-layout: { collection: quality, preview: blocks, tags: [layout] }
-  better-writing: { collection: quality, preview: code, tags: [copy] }
-  better-typography: { collection: quality, preview: code, tags: [type] }
-  better-colors: { collection: quality, preview: slider, tags: [color, contrast] }
-  better-ui: { collection: quality, preview: press, tags: [polish] }
-  break: { collection: quality, preview: rank, tags: [stress test, edge cases] }
-  break-ui: { collection: quality, preview: rank, tags: [stress test, edge cases] }
-  mobile-native: { collection: native, preview: phone-tabs, tags: [web] }
-  animate-expo: { collection: native, preview: phone-swipe, tags: [build] }
-  write-swift: { collection: native, preview: code, tags: [swift] }
+  gsap-core: { collection: gsap, preview: tween, tags: [reference], source: greensock/gsap-skills }
+  gsap-timeline: { collection: gsap, preview: timeline, tags: [reference], source: greensock/gsap-skills }
+  gsap-scrolltrigger: { collection: gsap, preview: trigger, tags: [reference], source: greensock/gsap-skills }
+  gsap-plugins: { collection: gsap, preview: morph, tags: [reference], source: greensock/gsap-skills }
+  gsap-react: { collection: gsap, preview: orbit, tags: [reference], source: greensock/gsap-skills }
+  gsap-frameworks: { collection: gsap, preview: stagger, tags: [reference], source: greensock/gsap-skills }
+  gsap-performance: { collection: gsap, preview: meter, tags: [reference], source: greensock/gsap-skills }
+  gsap-utils: { collection: gsap, preview: slider, tags: [reference], source: greensock/gsap-skills }
+  shadcn: { collection: interface, preview: form, tags: [components], source: shadcn-ui/ui }
+  pick-ui-library: { collection: interface, preview: pick, tags: [components], source: emilkowalski/skills }
+  ask-sonner: { collection: interface, preview: blocks, tags: [toasts], source: emilkowalski/skills }
+  prototype: { collection: interface, preview: variants, tags: [explore], source: emilkowalski/skills }
+  variant: { collection: interface, preview: variants, tags: [explore], source: jakubkrehel/skills }
+  state-machine: { collection: interface, preview: phone-tabs, tags: [states, mock data], source: jakubkrehel/skills }
+  build-design: { collection: interface, preview: form, tags: [figma, build], source: jakubkrehel/skills }
+  explain-interface: { collection: interface, preview: lookup, tags: [reference, inspect], source: jakubkrehel/skills }
+  better-interface: { collection: quality, preview: review, tags: [review], source: jakubkrehel/skills }
+  interface-review: { collection: quality, preview: review, tags: [review, diff], source: jakubkrehel/skills }
+  better-accessibility: { collection: quality, preview: scan, tags: [accessibility, wcag], source: jakubkrehel/skills }
+  better-layout: { collection: quality, preview: blocks, tags: [layout], source: jakubkrehel/skills }
+  better-writing: { collection: quality, preview: code, tags: [copy], source: jakubkrehel/skills }
+  better-typography: { collection: quality, preview: code, tags: [type], source: jakubkrehel/skills }
+  better-colors: { collection: quality, preview: slider, tags: [color, contrast], source: jakubkrehel/skills }
+  better-ui: { collection: quality, preview: press, tags: [polish], source: jakubkrehel/skills }
+  break: { collection: quality, preview: rank, tags: [stress test, edge cases], source: jakubkrehel/skills }
+  break-ui: { collection: quality, preview: rank, tags: [stress test, edge cases], source: emilkowalski/skills }
+  mobile-native: { collection: native, preview: phone-tabs, tags: [web], source: emilkowalski/skills }
+  animate-expo: { collection: native, preview: phone-swipe, tags: [build], source: emilkowalski/skills }
+  write-swift: { collection: native, preview: code, tags: [swift], source: emilkowalski/skills }
 
 # A chain is a run of skills that hand on to each other, in order. Each step says what it adds.
 # `skill` is a skill's folder name; it shows on the page and on each skill's panel.

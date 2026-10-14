@@ -25,6 +25,8 @@ export interface Entry {
   /** Skills: the other markdown files that ship beside SKILL.md. */
   docs?: { name: string; body: string }[];
   preview?: PreviewKind;
+  /** Skills: the GitHub repository the author publishes it in, as `owner/repo`. */
+  source?: string;
   /** Prompts: the skill this prompt calls. */
   skill?: string;
   /** Agent files: where the file lives. */
@@ -71,6 +73,12 @@ export const hueOf = (entry: Entry) => collectionById.get(entry.collection)?.hue
 
 /** The chains a skill is a step in. */
 export const chainsWith = (name: string) => chains.filter((c) => c.steps.some((s) => s.skill === name));
+
+/** The command that installs a skill from its author's repository. */
+export const installCommand = (source: string, skill: string) => `npx skills add ${source} --skill ${skill}`;
+
+/** Where the skill's folder is in its author's repository. */
+export const sourceUrl = (source: string, skill: string) => `https://github.com/${source}/tree/main/skills/${skill}`;
 
 /** What a skill is called by: `/animate`. Prompts and agent files use their title. */
 export const displayName = (entry: Entry) => (entry.type === 'skill' ? `/${entry.name}` : entry.title);
