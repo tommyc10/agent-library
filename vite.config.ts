@@ -84,7 +84,17 @@ function collect() {
     }
   }
 
-  return { collections: config.collections, examples: config.examples ?? [], entries };
+  // A chain that names a skill the library doesn't have would draw a dead step, so say which.
+  const chains = (config.chains ?? []) as { id: string; steps: { skill: string }[] }[];
+  for (const chain of chains) {
+    for (const step of chain.steps) {
+      if (!entries.some((e) => e.id === `skill/${step.skill}`)) {
+        throw new Error(`Chain "${chain.id}" in library.yml names "${step.skill}", which is not in content/skills/.`);
+      }
+    }
+  }
+
+  return { collections: config.collections, examples: config.examples ?? [], chains, entries };
 }
 
 function library(): Plugin {

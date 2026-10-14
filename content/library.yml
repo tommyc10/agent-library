@@ -16,6 +16,10 @@ collections:
     name: Interface
     hue: 55
     description: Components, libraries and layouts for building screens.
+  - id: quality
+    name: Interface quality
+    hue: 335
+    description: Review a screen for accessibility, layout, writing, type and colour, then try to break it.
   - id: native
     name: Native
     hue: 15
@@ -32,6 +36,8 @@ examples:
   - show how an order moves through our services
   - hand a task to another agent
   - add a toast
+  - check this page for accessibility
+  - what happens with a really long name
 
 # Where each skill sits and which preview its tile draws. A skill with no preview gets `blocks`.
 # Previews, each drawn in src/styles/previews.css:
@@ -47,6 +53,9 @@ skills:
   emil-design-eng: { collection: motion, preview: press, tags: [polish] }
   apple-design: { collection: motion, preview: phone, tags: [gestures, polish] }
   libraries-dev: { collection: motion, preview: beam, tags: [effects] }
+  animation-performance: { collection: motion, preview: meter, tags: [performance, jank] }
+  transitions-dev: { collection: motion, preview: morph, tags: [build, css] }
+  transitions-polish: { collection: motion, preview: curve, tags: [polish, timing] }
   scroll-story: { collection: stories, preview: scroll, tags: [authored, film] }
   tour: { collection: stories, preview: spotlight, tags: [authored, onboarding] }
   tour-lite: { collection: stories, preview: spotlight-lite, tags: [authored, onboarding] }
@@ -62,6 +71,68 @@ skills:
   pick-ui-library: { collection: interface, preview: pick, tags: [components] }
   ask-sonner: { collection: interface, preview: blocks, tags: [toasts] }
   prototype: { collection: interface, preview: variants, tags: [explore] }
+  variant: { collection: interface, preview: variants, tags: [explore] }
+  state-machine: { collection: interface, preview: phone-tabs, tags: [states, mock data] }
+  build-design: { collection: interface, preview: form, tags: [figma, build] }
+  explain-interface: { collection: interface, preview: lookup, tags: [reference, inspect] }
+  better-interface: { collection: quality, preview: review, tags: [review] }
+  interface-review: { collection: quality, preview: review, tags: [review, diff] }
+  better-accessibility: { collection: quality, preview: scan, tags: [accessibility, wcag] }
+  better-layout: { collection: quality, preview: blocks, tags: [layout] }
+  better-writing: { collection: quality, preview: code, tags: [copy] }
+  better-typography: { collection: quality, preview: code, tags: [type] }
+  better-colors: { collection: quality, preview: slider, tags: [color, contrast] }
+  better-ui: { collection: quality, preview: press, tags: [polish] }
+  break: { collection: quality, preview: rank, tags: [stress test, edge cases] }
+  break-ui: { collection: quality, preview: rank, tags: [stress test, edge cases] }
   mobile-native: { collection: native, preview: phone-tabs, tags: [web] }
   animate-expo: { collection: native, preview: phone-swipe, tags: [build] }
   write-swift: { collection: native, preview: code, tags: [swift] }
+
+# A chain is a run of skills that hand on to each other, in order. Each step says what it adds.
+# `skill` is a skill's folder name; it shows on the page and on each skill's panel.
+chains:
+  - id: add-motion
+    name: Add motion to a screen
+    collection: motion
+    steps:
+      - { skill: find-animation-opportunities, does: "Find what should move and what shouldn't" }
+      - { skill: animate, does: "Build each one with the right curve and duration" }
+      - { skill: animation-performance, does: "Keep it inside the frame budget" }
+      - { skill: review-animations, does: "Review how it feels before it ships" }
+  - id: transitions
+    name: Drop in a transition and tune it
+    collection: motion
+    steps:
+      - { skill: transitions-dev, does: "Pick a ready-made transition and add it" }
+      - { skill: transitions-polish, does: "Tune timing and easing to the token scale" }
+      - { skill: review-animations, does: "Check it against the rest of the motion" }
+  - id: design-to-code
+    name: Build a screen from a design
+    collection: interface
+    steps:
+      - { skill: build-design, does: "Build it from the Figma file or image" }
+      - { skill: state-machine, does: "Work through every state with mock data" }
+      - { skill: break-ui, does: "Feed it worst-case data and fix what breaks" }
+      - { skill: better-interface, does: "Review the finished screen across every area" }
+  - id: component
+    name: Explore a new component
+    collection: interface
+    steps:
+      - { skill: variant, does: "Build three different answers and pick one" }
+      - { skill: state-machine, does: "Render every state it can be in" }
+      - { skill: break, does: "Stress test it under every scenario that can reach it" }
+  - id: before-merge
+    name: Check a change before it merges
+    collection: quality
+    steps:
+      - { skill: interface-review, does: "Find what the change made worse" }
+      - { skill: better-accessibility, does: "Fix keyboard, focus and screen reader issues" }
+      - { skill: better-writing, does: "Tighten the labels, errors and empty states" }
+  - id: phone
+    name: Make a web app feel native
+    collection: native
+    steps:
+      - { skill: mobile-native, does: "Fix the tap, scroll and viewport tells" }
+      - { skill: apple-design, does: "Add physical, interruptible gestures" }
+      - { skill: animation-performance, does: "Keep it smooth on a real phone" }

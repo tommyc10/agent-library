@@ -38,13 +38,23 @@ export interface Collection {
   description: string;
 }
 
+/** A run of skills that hand on to each other, in order. */
+export interface Chain {
+  id: string;
+  name: string;
+  /** The collection it is drawn in. */
+  collection: string;
+  steps: { skill: string; does: string }[];
+}
+
 export interface LibraryData {
   collections: Collection[];
   examples: string[];
+  chains: Chain[];
   entries: Entry[];
 }
 
-export const { collections, examples, entries } = data;
+export const { collections, examples, chains, entries } = data;
 
 export const TYPES: { id: EntryType; label: string; plural: string }[] = [
   { id: 'skill', label: 'Skill', plural: 'Skills' },
@@ -58,6 +68,9 @@ const collectionById = new Map(collections.map((c) => [c.id, c]));
 export const getEntry = (id: string | null) => (id ? entryById.get(id) : undefined);
 export const getCollection = (id: string) => collectionById.get(id);
 export const hueOf = (entry: Entry) => collectionById.get(entry.collection)?.hue ?? 0;
+
+/** The chains a skill is a step in. */
+export const chainsWith = (name: string) => chains.filter((c) => c.steps.some((s) => s.skill === name));
 
 /** What a skill is called by: `/animate`. Prompts and agent files use their title. */
 export const displayName = (entry: Entry) => (entry.type === 'skill' ? `/${entry.name}` : entry.title);

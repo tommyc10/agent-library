@@ -1,12 +1,14 @@
 import { ChevronDown, ChevronUp, LayoutGrid, Moon, Pause, Play, Search, Sun, X } from 'lucide-react';
 import { AnimatePresence, motion, MotionConfig, type MotionStyle } from 'motion/react';
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react';
 import { Backdrop } from './components/Backdrop';
+import { ChainCard } from './components/Chains';
+import { Dragon } from './components/Dragon';
 import { leave, reflow, Tile, TYPE_ICON } from './components/Items';
 import { Panel } from './components/Panel';
 import { Roll } from './components/Roll';
 import { Tstack } from './components/Tstack';
-import { collections, displayName, entries, examples, getEntry, plural, search, TYPES, type Entry, type EntryType } from './lib/library';
+import { chains, collections, displayName, entries, examples, getEntry, plural, search, TYPES, type Entry, type EntryType } from './lib/library';
 import { announce, reducedMotion, transition, typing } from './lib/motion';
 
 type TypeFilter = EntryType | 'all';
@@ -114,15 +116,15 @@ export function App() {
       }),
     );
 
-  // The experimental section is only there when nothing is filtered, so clear the filters, then go.
-  const goExperimental = () => {
+  // The chains and experimental sections are only there when nothing is filtered, so clear the filters, then go.
+  const goTo = (id: string) => {
     refilter(() => {
       setQuery('');
       setType('all');
       setCollection(null);
     });
     requestAnimationFrame(() =>
-      document.getElementById('experimental')?.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' }),
+      document.getElementById(id)?.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' }),
     );
   };
 
@@ -167,6 +169,23 @@ export function App() {
     localStorage.setItem('library-theme', next);
     transition(() => setTheme(next));
   };
+
+  // A different collection is a different page: show it from its top. Left alone, the page
+  // keeps the scroll it had, so a longer collection opens part way down, and a shorter one
+  // snaps back to the top once the old one has faded and stopped holding the page open.
+  // The most it can scroll is read from `main`, which the fading section isn't part of.
+  // This runs before paint, so the jump to the new place is hidden by the cross-fade.
+  const switched = useRef(false);
+  useLayoutEffect(() => {
+    if (!switched.current) {
+      switched.current = true;
+      return;
+    }
+    const start = bodyRef.current!.getBoundingClientRect().top + scrollY - 24;
+    const furthest = bodyRef.current!.closest('main')!.getBoundingClientRect().bottom + scrollY - innerHeight;
+    const top = Math.max(0, Math.min(start, furthest));
+    if (scrollY > top) scrollTo({ top, behavior: 'instant' });
+  }, [collection]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -271,7 +290,7 @@ export function App() {
     <div className="lib">
       <aside className="lib-rail" inert={open !== null}>
         <div className="lib-brand">
-          <img className="lib-mark" src="./favicon.png" alt="" width={28} height={28} />
+          <Dragon />
           <span>
             <strong>Library</strong>
             <small>Skills, prompts and agent files</small>
@@ -311,7 +330,12 @@ export function App() {
               <Roll value={forCollections.filter((e) => e.collection === c.id).length} />
             </button>
           ))}
-          <button type="button" className="lib-nav-item lib-nav-experimental" onClick={goExperimental}>
+          <button type="button" className="lib-nav-item lib-nav-chains" onClick={() => goTo('chains')}>
+            <span className="lib-dot" aria-hidden />
+            <span>Chains</span>
+            <span className="lib-roll">{chains.length}</span>
+          </button>
+          <button type="button" className="lib-nav-item lib-nav-experimental" onClick={() => goTo('experimental')}>
             <span className="lib-dot" aria-hidden />
             <span>Experimental</span>
             <span className="lib-roll">1</span>
@@ -463,7 +487,23 @@ export function App() {
           </AnimatePresence>
         </div>
 
-        {/* Not entries, so this is only there when the whole library is: no search, no filter. */}
+        {/* Not entries, so these are only there when the whole library is: no search, no filter. */}
+        {!searching && type === 'all' && !collection && chains.length > 0 && (
+          <section id="chains" className="lib-section lib-chains-section" aria-labelledby="lib-chains-title">
+            <header className="lib-section-head">
+              <span className="lib-section-n">→</span>
+              <h2 id="lib-chains-title">Chains</h2>
+              <p>Skills that hand on to each other. Run them in order.</p>
+              <span className="lib-section-count">{chains.length}</span>
+            </header>
+            <div className="lib-chains">
+              {chains.map((chain) => (
+                <ChainCard key={chain.id} chain={chain} onOpen={openEntry} />
+              ))}
+            </div>
+          </section>
+        )}
+
         {!searching && type === 'all' && !collection && (
           <section id="experimental" className="lib-section lib-experimental" aria-labelledby="lib-experimental-title">
             <header className="lib-section-head">

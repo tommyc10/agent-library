@@ -1,8 +1,9 @@
 import { Link2, X } from 'lucide-react';
 import { motion, type MotionStyle } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { displayName, entries, getCollection, getEntry, hueOf, TYPES, type Entry } from '../lib/library';
+import { chainsWith, displayName, entries, getCollection, getEntry, hueOf, TYPES, type Entry } from '../lib/library';
 import { usePanelMotion } from '../lib/panel-motion';
+import { ChainCard } from './Chains';
 import { CopyButton } from './CopyButton';
 import { TYPE_ICON } from './Items';
 import { localTarget, Markdown } from './Markdown';
@@ -78,6 +79,7 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
     { where: 'Anything else', text: `Use the ${entry.name} skill` },
   ];
   const extras = (entry.files ?? []).filter((f) => !f.endsWith('.md'));
+  const inChains = chainsWith(entry.name);
 
   return (
     <>
@@ -93,6 +95,17 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
           ))}
         </div>
       </section>
+
+      {inChains.length > 0 && (
+        <section className="lib-block">
+          <h3 className="lib-label">{inChains.length > 1 ? 'Part of these chains' : 'Part of a chain'}</h3>
+          <div className="lib-chains">
+            {inChains.map((chain) => (
+              <ChainCard key={chain.id} chain={chain} current={entry.name} onOpen={onOpen} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {prompts.length > 0 && (
         <section className="lib-block">

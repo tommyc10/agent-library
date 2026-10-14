@@ -22,6 +22,7 @@ Nothing is edited in the site. Add a file under `content/` and it appears.
 | A skill | Put its folder in `content/skills/<name>/` (it needs a `SKILL.md`), then give it a collection and preview in `content/library.yml`. |
 | Many skills | `npm run import-skills -- <folder of skills>` copies the markdown of every skill in that folder. |
 | A collection | Add it to `collections` in `content/library.yml` with a `hue` from 0 to 360. |
+| A chain | Add it to `chains` in `content/library.yml`: a `name`, a `collection` for its colour, and `steps`, each a `skill` and what it `does`. The build stops if a step names a skill that isn't there. |
 
 Quote any frontmatter value that contains a colon.
 
