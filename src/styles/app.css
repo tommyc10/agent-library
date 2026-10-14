@@ -1498,6 +1498,24 @@ a.lib-btn {
   }
 }
 
+/* Light theme, frosted: these surfaces blur the page behind them, lightly enough that its
+ * dot grid still shows through as a texture. Their colours are in theme.css. */
+:root[data-theme='light'] :is(.lib-draw, .lib-rail, .lib-tstack-card, .lib-search) {
+  -webkit-backdrop-filter: blur(2px) saturate(1.2);
+  backdrop-filter: blur(2px) saturate(1.2);
+}
+/* The panel stays solid: what it holds is long text, and the page must not show through. */
+:root[data-theme='light'] .lib-panel {
+  background: #f7f8fa;
+}
+:root[data-theme='light'] :is(.lib-pv, .lib-draw-text) {
+  background-color: rgba(246, 247, 250, 0.88);
+}
+/* Stronger dots, so there is something behind the glass. */
+:root[data-theme='light'] .lib-backdrop {
+  background-image: radial-gradient(circle at center, rgba(20, 28, 48, 0.2) 0.8px, transparent 1.4px);
+}
+
 /* More contrast: nothing behind the text. */
 @media (prefers-contrast: more) {
   .lib-backdrop {
@@ -1507,6 +1525,17 @@ a.lib-btn {
 
 /* Less transparency, or more contrast: the glass surfaces turn solid. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root[data-theme='light'] {
+    --l0: #f7f8fa;
+    --l1: #f1f3f6;
+    --l3: #fbfbfc;
+    --l4: #f7f8fa;
+    --surface-card: #fbfbfc;
+    --surface-raised: #ffffff;
+  }
+  :root[data-theme='light'] .lib-panel {
+    background: #f8f9fb;
+  }
   .lib-search {
     background: var(--l3);
     backdrop-filter: none;

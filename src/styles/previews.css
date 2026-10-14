@@ -324,7 +324,7 @@
   inset: -64px -124px;
 }
 .lib-pv-spotlight b:nth-of-type(1) {
-  background: rgb(0 0 0 / 0.28);
+  background: var(--dim);
   clip-path: path(evenodd, 'M0 0H398V188H0ZM127 60H177A7 7 0 0 1 184 67V81A7 7 0 0 1 177 88H127A7 7 0 0 1 120 81V67A7 7 0 0 1 127 60Z');
   animation: lib-pv-spot-dim 4.2s var(--ease-in-out) infinite;
 }

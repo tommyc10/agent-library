@@ -49,6 +49,8 @@
   --fill-l: 0.76;
   --fill-c: 0.16;
   --well-tint: 20%;
+  /* How much a drawing darkens what is behind a spotlight. */
+  --dim: rgb(0 0 0 / 0.28);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -76,51 +78,53 @@
 }
 
 :root[data-theme='light'] {
-  --l0: #efefef;
-  --l1: #f7f7f7;
-  --l2: #ffffff;
-  --l3: #fafafa;
-  --l4: #ececec;
-  --l5: #e2e2e2;
-  --line: rgba(0, 0, 0, 0.07);
-  --line-2: rgba(0, 0, 0, 0.1);
-  --line-3: rgba(0, 0, 0, 0.2);
-  --fg: #171717;
-  --fg-2: #525252;
-  --fg-3: #696969;
+  /* Frost: a cool grey page under frosted white. The page is the only opaque surface; the
+   * rail, cards and raised controls are translucent, and app.css blurs what shows through.
+   * Greys lean slightly blue. */
+  --l0: rgba(255, 255, 255, 0.6);
+  --l1: rgba(240, 242, 246, 0.75);
+  --l2: #eceef2;
+  --l3: rgba(255, 255, 255, 0.6);
+  --l4: rgba(255, 255, 255, 0.85);
+  --l5: #ffffff;
+  --line: rgba(20, 28, 48, 0.08);
+  --line-2: rgba(20, 28, 48, 0.12);
+  --line-3: rgba(20, 28, 48, 0.22);
+  --fg: #14161b;
+  --fg-2: #4a4f59;
+  --fg-3: #626875;
   --green: #14753a;
   --amber: #9a5b00;
   --amber-wash: rgb(212 148 15 / 0.1);
   --amber-line: rgb(154 91 0 / 0.36);
-  --glass: rgba(255, 255, 255, 0.8);
-  --glass-edge: rgba(255, 255, 255, 0.9);
-  --card-edge: rgba(255, 255, 255, 0.8);
-  --surface-card: linear-gradient(180deg, var(--l2), var(--l3));
-  --surface-raised: var(--l2);
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-edge: rgba(255, 255, 255, 0.95);
+  --card-edge: rgba(255, 255, 255, 0.95);
+  --surface-card: rgba(255, 255, 255, 0.5);
+  --surface-raised: rgba(255, 255, 255, 0.9);
   --shadow-border:
-    0 0 0 1px oklch(0 0 0 / 0.06),
-    0 1px 2px -1px oklch(0 0 0 / 0.06),
-    0 2px 4px 0 oklch(0 0 0 / 0.04);
+    0 0 0 1px rgba(20, 28, 48, 0.07),
+    0 8px 24px -10px rgba(20, 28, 48, 0.14);
   --shadow-border-hover:
-    0 0 0 1px oklch(0 0 0 / 0.08),
-    0 1px 2px -1px oklch(0 0 0 / 0.08),
-    0 2px 4px 0 oklch(0 0 0 / 0.06);
-  --shadow-card-light: inset 0 1px 0 var(--card-edge);
-  --shadow-well: inset 0 0 0 1px var(--line), inset 0 2px 4px oklch(0 0 0 / 0.04);
+    0 0 0 1px rgba(20, 28, 48, 0.11),
+    0 12px 32px -12px rgba(20, 28, 48, 0.2);
+  --shadow-card-light: inset 0 0 0 1px rgba(255, 255, 255, 0.7), inset 0 1px 0 rgba(255, 255, 255, 1);
+  --shadow-well: inset 0 0 0 1px rgba(20, 28, 48, 0.06);
   --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.16);
   --shadow-lift: 0 18px 48px -12px rgb(0 0 0 / 0.18);
   --overlay: rgba(0, 0, 0, 0.2);
-  --tint: rgba(0, 0, 0, 0.04);
+  --tint: rgba(20, 28, 48, 0.05);
   --focus-ring: rgba(0, 0, 0, 0.6);
   --selection: rgba(0, 0, 0, 0.12);
   --primary: #171717;
   --primary-fg: #ffffff;
   --primary-hover: #333333;
-  --tone-l: 0.47;
+  --tone-l: 0.45;
   --tone-c: 0.17;
   --fill-l: 0.64;
   --fill-c: 0.19;
-  --well-tint: 13%;
+  --well-tint: 12%;
+  --dim: rgb(0 0 0 / 0.04);
   color-scheme: light;
 }
 
