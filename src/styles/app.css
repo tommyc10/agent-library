@@ -466,12 +466,12 @@ a.lib-btn {
 
 .lib-hero {
   position: relative;
-  padding: 88px 0 12px;
+  padding: 72px 0 12px;
 }
 
-.lib-hero h1 {
+.lib-hero-title {
   max-width: 38.75rem;
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl);
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.042em;
@@ -487,6 +487,306 @@ a.lib-btn {
 .lib-hero-sub .lib-roll {
   color: var(--fg);
   font-weight: 500;
+}
+
+/* ---------- tblock: the hero ---------- */
+
+/* The card lays itself out by its own width, not the window's, since the rail takes a share. */
+.lib-tblock-beam {
+  --beam-a: oklch(0.86 0.09 220);
+  --beam-b: oklch(0.7 0.14 250);
+  --beam-core: oklch(0.98 0.03 210);
+  position: relative;
+  container-type: inline-size;
+  margin-top: 48px;
+  border-radius: 18px;
+  box-shadow: var(--shadow-border);
+}
+:root[data-theme='light'] .lib-tblock-beam {
+  --beam-a: oklch(0.68 0.15 230);
+  --beam-b: oklch(0.55 0.2 260);
+  --beam-core: oklch(0.8 0.12 220);
+}
+
+/* The beam: a conic gradient with one bright arc, turned by a registered angle so it
+ * interpolates. The stroke is that gradient masked down to a 1px ring on the card's
+ * edge; the glow is a wider ring of it, blurred, so the light spills both ways. */
+@property --lib-beam-turn {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+.lib-tblock-beam::before,
+.lib-tblock-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--lib-beam-turn),
+    transparent 0deg 250deg,
+    var(--beam-b) 300deg,
+    var(--beam-a) 340deg,
+    var(--beam-core) 354deg,
+    transparent 360deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+.lib-tblock-beam::before {
+  z-index: 2;
+  padding: 1px;
+  pointer-events: none;
+}
+.lib-tblock-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  filter: blur(10px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.lib-tblock-glow::before {
+  inset: -2px;
+  padding: 4px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lib-tblock-beam {
+    animation: lib-beam-turn 6s linear infinite;
+  }
+}
+/* Paused from the rail, or while the panel covers the page. */
+[data-still] .lib-tblock-beam,
+[inert] .lib-tblock-beam {
+  animation-play-state: paused;
+}
+@keyframes lib-beam-turn {
+  to {
+    --lib-beam-turn: 360deg;
+  }
+}
+
+.lib-tblock {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem);
+  border-radius: 18px;
+  background: var(--surface-card);
+  box-shadow: var(--shadow-card-light);
+}
+
+.lib-tblock-main {
+  padding: 36px 40px 34px;
+}
+.lib-tblock-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+}
+.lib-tblock-name {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--l4);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  color: var(--fg);
+  font: 500 var(--text-xs) / 1.2 var(--mono);
+}
+.lib-tblock-version {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.lib-tblock-main h1 {
+  max-width: 16ch;
+  margin-top: 22px;
+  font-size: var(--text-4xl);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+}
+.lib-tblock-lead {
+  max-width: 56ch;
+  margin-top: 16px;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+
+/* How a task runs: three steps in a row, joined by the line they sit on. */
+.lib-tblock-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 30px 0 0;
+  padding: 22px 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+.lib-tblock-steps li {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+.lib-tblock-step-n {
+  display: grid;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: var(--l4);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  font: 500 var(--text-2xs) / 1 var(--mono);
+  color: var(--fg);
+}
+.lib-tblock-steps h2 {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--fg);
+}
+.lib-tblock-steps p {
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--fg-3);
+  text-wrap: pretty;
+}
+.lib-tblock code {
+  font: 400 0.92em / 1.5 var(--mono);
+  color: var(--fg);
+}
+
+.lib-tblock-side {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 28px;
+  border-left: 1px solid var(--line);
+  background: color-mix(in srgb, var(--l1) 50%, transparent);
+}
+.lib-tblock-install {
+  display: grid;
+  gap: 10px;
+}
+.lib-tblock-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--l1);
+  box-shadow: var(--shadow-well);
+}
+.lib-tblock-tabs button {
+  flex: 1;
+  height: 1.875rem;
+  border-radius: 7px;
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--fg-3);
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+}
+@media (hover: hover) {
+  .lib-tblock-tabs button:hover {
+    color: var(--fg);
+  }
+}
+.lib-tblock-tabs button[aria-pressed='true'] {
+  background: var(--l4);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  color: var(--fg);
+}
+.lib-tblock-cmd {
+  position: relative;
+  padding: 14px 44px 14px 14px;
+  border-radius: 10px;
+  background: var(--l1);
+  box-shadow: var(--shadow-well);
+}
+.lib-tblock-cmd pre {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font: 400 var(--text-xs) / 1.6 var(--mono);
+  color: var(--fg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.lib-tblock-prompt {
+  color: var(--fg-3);
+  user-select: none;
+}
+.lib-tblock-cmd .lib-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.lib-tblock-then {
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  color: var(--fg-3);
+}
+
+.lib-tblock-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.lib-tblock-counts div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+}
+.lib-tblock-counts dt {
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+}
+.lib-tblock-counts dd {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.lib-tblock-link {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* Too narrow for two columns: the install side goes under the pitch. */
+@container (max-width: 60rem) {
+  .lib-tblock {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lib-tblock-side {
+    padding: 28px 40px 32px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+@container (max-width: 40rem) {
+  .lib-tblock-main {
+    padding: 26px 20px 24px;
+  }
+  .lib-tblock-main h1 {
+    font-size: var(--text-3xl);
+  }
+  .lib-tblock-eyebrow > :nth-child(2) {
+    display: none;
+  }
+  .lib-tblock-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lib-tblock-side {
+    padding: 20px;
+  }
 }
 
 .lib-search {
@@ -809,14 +1109,6 @@ a.lib-btn {
   color: var(--fg-2);
 }
 
-/* ---------- experimental: not a collection, so it wears amber ---------- */
-
-.lib-experimental {
-  scroll-margin-top: 24px;
-}
-.lib-experimental .lib-section-n {
-  color: var(--amber);
-}
 /* ---------- chains ---------- */
 
 .lib-chains-section {
@@ -929,149 +1221,6 @@ a.lib-btn {
   .lib-chain-step span:last-child {
     grid-column: 2;
   }
-}
-
-.lib-nav-experimental .lib-dot {
-  background: var(--amber);
-  box-shadow: 0 0 0 3px var(--amber-wash);
-}
-.lib-tstack-name {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.lib-tstack-name h3 {
-  font: 500 var(--text-base) / 1 var(--mono);
-  letter-spacing: -0.01em;
-}
-.lib-tstack-pill {
-  display: inline-flex;
-  align-items: center;
-  height: 1.375rem;
-  padding: 0 9px;
-  border-radius: 999px;
-  background: var(--amber-wash);
-  box-shadow: inset 0 0 0 1px var(--amber-line);
-  color: var(--amber);
-  font: 500 var(--text-2xs) / 1 var(--mono);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.lib-tstack-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  border: 1px solid transparent;
-  border-radius: 14px;
-  background: var(--surface-card);
-  box-shadow: var(--shadow-card-light), 0 0 0 1px var(--amber-line);
-  overflow: hidden;
-}
-/* Hazard tape along the top edge. */
-.lib-tstack-hatch {
-  grid-column: 1 / -1;
-  height: 10px;
-  background: repeating-linear-gradient(135deg, var(--amber) 0 7px, transparent 7px 14px);
-  opacity: 0.55;
-}
-
-.lib-tstack-notice {
-  display: grid;
-  align-content: start;
-  gap: 14px;
-  padding: 30px 32px 28px;
-}
-.lib-tstack-notice .lib-tstack-lead {
-  max-width: 20ch;
-  color: var(--fg);
-  font-size: var(--text-3xl);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-.lib-tstack-notice p {
-  max-width: 54ch;
-  font-size: var(--text-md);
-  line-height: 1.62;
-  color: var(--fg-2);
-  text-wrap: pretty;
-}
-.lib-tstack-notice code {
-  font: 400 0.9em / 1 var(--mono);
-  color: var(--fg);
-}
-.lib-tstack-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-.lib-tstack-counts {
-  display: flex;
-  gap: 28px;
-  margin: 12px 0 0;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
-}
-.lib-tstack-counts dt {
-  font-size: var(--text-xs);
-  color: var(--fg-3);
-}
-.lib-tstack-counts dd {
-  margin: 2px 0 0;
-  font-size: var(--text-xl);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-.lib-tstack-install {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-  padding: 26px 24px 24px;
-  border-left: 1px solid var(--line);
-  background: color-mix(in srgb, var(--l1) 55%, transparent);
-}
-.lib-tstack-install-head {
-  margin: 0 0 2px;
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--fg-3);
-}
-.lib-tstack-install-note {
-  margin-top: 2px;
-  font-size: var(--text-xs);
-  color: var(--amber);
-}
-/* The commands for one tool, with their copy button. */
-.lib-tstack-cmd {
-  position: relative;
-  display: grid;
-  gap: 8px;
-  padding: 12px 44px 12px 14px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: var(--l1);
-  box-shadow: var(--shadow-well);
-}
-.lib-tstack-cmd > span {
-  font-size: var(--text-xs);
-  color: var(--fg-3);
-}
-.lib-tstack-cmd pre {
-  margin: 0;
-  font: 400 var(--text-xs) / 1.75 var(--mono);
-  color: var(--fg);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-.lib-tstack-cmd .lib-copy {
-  position: absolute;
-  top: 8px;
-  right: 8px;
 }
 
 /* ---------- detail panel ---------- */
@@ -1568,22 +1717,14 @@ a.lib-btn {
   .lib-hero {
     padding-top: 44px;
   }
-  .lib-hero h1 {
-    font-size: var(--text-3xl);
+  .lib-hero-title {
+    font-size: var(--text-2xl);
+  }
+  .lib-tblock-beam {
+    margin-top: 20px;
   }
   .lib-section-head p {
     display: none;
-  }
-  .lib-tstack-card {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .lib-tstack-notice {
-    padding: 22px 18px;
-  }
-  .lib-tstack-install {
-    padding: 18px;
-    border-left: 0;
-    border-top: 1px solid var(--line);
   }
   /* The panel is a sheet: it rises from the bottom edge, leaving a strip of the page
    * showing above it, and is dragged down by its header to put it away. */
@@ -1659,7 +1800,7 @@ a.lib-btn {
 
 /* Light theme, frosted: these surfaces blur the page behind them, lightly enough that its
  * dot grid still shows through as a texture. Their colours are in theme.css. */
-:root[data-theme='light'] :is(.lib-draw, .lib-rail, .lib-tstack-card, .lib-search) {
+:root[data-theme='light'] :is(.lib-draw, .lib-rail, .lib-tblock, .lib-search) {
   -webkit-backdrop-filter: blur(2px) saturate(1.2);
   backdrop-filter: blur(2px) saturate(1.2);
 }
@@ -1754,7 +1895,7 @@ a.lib-btn {
 /* Forced colours drop every box-shadow, and most edges here are drawn with one.
  * Give the controls and wells a real edge there. */
 @media (forced-colors: active) {
-  :where(.lib-kbd, .lib-badge, .lib-tstack-pill, .lib-more, .lib-btn, .lib-seg, .lib-seg button[aria-pressed='true'], .lib-nav-pill, .lib-search, .lib-example, .lib-code-copy, .lib-pv, .lib-draw-text):not(:focus-visible) {
+  :where(.lib-kbd, .lib-badge, .lib-more, .lib-btn, .lib-seg, .lib-seg button[aria-pressed='true'], .lib-nav-pill, .lib-search, .lib-tblock, .lib-tblock-tabs button[aria-pressed='true'], .lib-example, .lib-code-copy, .lib-pv, .lib-draw-text):not(:focus-visible) {
     outline: 1px solid CanvasText;
     outline-offset: -1px;
   }

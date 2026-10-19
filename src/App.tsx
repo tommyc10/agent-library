@@ -7,7 +7,7 @@ import { Dragon } from './components/Dragon';
 import { leave, reflow, Tile, TYPE_ICON } from './components/Items';
 import { Panel } from './components/Panel';
 import { Roll } from './components/Roll';
-import { Tstack } from './components/Tstack';
+import { Tblock } from './components/Tblock';
 import { chains, collections, displayName, entries, examples, getEntry, plural, search, TYPES, type Entry, type EntryType } from './lib/library';
 import { announce, reducedMotion, transition, typing } from './lib/motion';
 
@@ -116,7 +116,7 @@ export function App() {
       }),
     );
 
-  // The chains and experimental sections are only there when nothing is filtered, so clear the filters, then go.
+  // The chains section is only there when nothing is filtered, so clear the filters, then go.
   const goTo = (id: string) => {
     refilter(() => {
       setQuery('');
@@ -335,11 +335,6 @@ export function App() {
             <span>Chains</span>
             <span className="lib-roll">{chains.length}</span>
           </button>
-          <button type="button" className="lib-nav-item lib-nav-experimental" onClick={() => goTo('experimental')}>
-            <span className="lib-dot" aria-hidden />
-            <span>Experimental</span>
-            <span className="lib-roll">1</span>
-          </button>
         </div>
 
         <div className="lib-rail-foot">
@@ -368,8 +363,10 @@ export function App() {
       <Backdrop />
 
       <main className="lib-main" inert={open !== null}>
+        <Tblock />
+
         <header className="lib-hero">
-          <h1>What do you need an agent to do?</h1>
+          <h2 className="lib-hero-title">What do you need an agent to do?</h2>
           <p className="lib-hero-sub">
             <Roll value={count(entries, 'skill')} /> skills, <Roll value={count(entries, 'prompt')} /> prompts and{' '}
             <Roll value={count(entries, 'agent')} /> agent files, ready to copy.
@@ -504,17 +501,6 @@ export function App() {
           </section>
         )}
 
-        {!searching && type === 'all' && !collection && (
-          <section id="experimental" className="lib-section lib-experimental" aria-labelledby="lib-experimental-title">
-            <header className="lib-section-head">
-              <span className="lib-section-n">X</span>
-              <h2 id="lib-experimental-title">Experimental</h2>
-              <p>Still in development. Expect rough edges and changes.</p>
-              <span className="lib-section-count">1</span>
-            </header>
-            <Tstack />
-          </section>
-        )}
       </main>
 
       <div id="lib-status" className="lib-status" role="status" />
