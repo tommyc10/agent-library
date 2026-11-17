@@ -493,19 +493,14 @@ a.lib-btn {
 
 /* The card lays itself out by its own width, not the window's, since the rail takes a share. */
 .lib-tblock-beam {
-  --beam-a: oklch(0.86 0.09 220);
-  --beam-b: oklch(0.7 0.14 250);
-  --beam-core: oklch(0.98 0.03 210);
+  --beam-a: var(--tblock-a);
+  --beam-b: var(--tblock-b);
+  --beam-core: var(--tblock-core);
   position: relative;
   container-type: inline-size;
   margin-top: 48px;
   border-radius: 18px;
   box-shadow: var(--shadow-border);
-}
-:root[data-theme='light'] .lib-tblock-beam {
-  --beam-a: oklch(0.68 0.15 230);
-  --beam-b: oklch(0.55 0.2 260);
-  --beam-core: oklch(0.8 0.12 220);
 }
 
 /* The beam: a conic gradient with one bright arc, turned by a registered angle so it
@@ -587,14 +582,6 @@ a.lib-btn {
   gap: 10px;
   font-size: var(--text-xs);
   color: var(--fg-3);
-}
-.lib-tblock-name {
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: var(--l4);
-  box-shadow: inset 0 0 0 1px var(--line-2);
-  color: var(--fg);
-  font: 500 var(--text-xs) / 1.2 var(--mono);
 }
 .lib-tblock-version {
   font-family: var(--mono);
@@ -734,7 +721,7 @@ a.lib-btn {
 
 .lib-tblock-counts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0;
   padding-top: 20px;
   border-top: 1px solid var(--line);
@@ -755,9 +742,349 @@ a.lib-btn {
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
-.lib-tblock-link {
-  align-self: flex-start;
+.lib-tblock-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   margin-top: auto;
+}
+.lib-tblock-shipped {
+  background: var(--tblock-wash);
+  box-shadow: inset 0 0 0 1px var(--tblock-line);
+  color: var(--fg);
+}
+.lib-tblock-shipped strong {
+  color: var(--tblock);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.lib-tblock-shipped .lucide {
+  color: var(--tblock);
+  transition: translate 200ms var(--ease-out);
+}
+@media (hover: hover) {
+  .lib-tblock-shipped:hover {
+    background: var(--tblock-wash);
+    box-shadow: inset 0 0 0 1px var(--tblock);
+  }
+  .lib-tblock-shipped:hover .lucide {
+    translate: 2px 0;
+  }
+}
+
+/* The headline's last words, lit in the beam's colours. */
+.lib-tblock-lit {
+  background: linear-gradient(100deg, var(--fg) 0%, var(--tblock-a) 45%, var(--tblock-b) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* tblock's mark: a small lit block and a name. */
+.lib-tb-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 500 var(--text-xs) / 1.2 var(--mono);
+  color: var(--fg);
+  white-space: nowrap;
+}
+.lib-tb-glyph {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 2.5px;
+  background: linear-gradient(135deg, var(--tblock-core), var(--tblock-a) 40%, var(--tblock-b));
+  box-shadow: 0 0 0 3px var(--tblock-wash), 0 0 10px -2px var(--tblock-a);
+}
+.lib-tblock-eyebrow > .lib-tb-mark {
+  padding: 4px 9px 4px 8px;
+  border-radius: 6px;
+  background: var(--l4);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+
+/* ---------- the tblock command ---------- */
+
+.lib-tblock-cli {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 14px;
+  padding: 26px 40px 36px;
+  border-top: 1px solid var(--line);
+}
+.lib-tblock-cli-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+}
+.lib-tblock-cli-head h2 {
+  font-size: var(--text-md);
+  font-weight: 500;
+}
+.lib-tblock-cli-head p {
+  font-size: var(--text-sm);
+  color: var(--fg-3);
+}
+
+.lib-term {
+  border-radius: 12px;
+  background: var(--term-bg);
+  box-shadow:
+    0 0 0 1px var(--term-line),
+    0 24px 48px -24px rgb(0 0 0 / 0.5),
+    0 0 0 6px color-mix(in oklch, var(--tblock-b) 6%, transparent);
+  color: var(--term-fg);
+  overflow: hidden;
+}
+.lib-term-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 2.75rem;
+  padding: 0 8px 0 14px;
+  background: var(--term-bar);
+  border-bottom: 1px solid var(--term-line);
+}
+.lib-term-bar .lib-copy {
+  margin-left: auto;
+  color: var(--term-fg-2);
+}
+@media (hover: hover) {
+  .lib-term-bar .lib-copy:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--term-fg);
+  }
+}
+.lib-term-lights {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+.lib-term-lights span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+.lib-term-tabs {
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.lib-term-tab {
+  position: relative;
+  flex: none;
+  height: 1.875rem;
+  padding: 0 10px;
+  border-radius: 7px;
+  font: 400 var(--text-xs) / 1 var(--mono);
+  color: var(--term-fg-3);
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+}
+@media (hover: hover) {
+  .lib-term-tab:hover {
+    color: var(--term-fg);
+  }
+}
+.lib-term-tab[aria-pressed='true'] {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--term-fg);
+}
+/* While a command holds, a hairline under its tab fills; when it is full the next plays. */
+.lib-term-tab::after {
+  content: '';
+  position: absolute;
+  inset: auto 10px 3px;
+  height: 1px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--tblock-b), var(--tblock-a));
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0;
+}
+.lib-term[data-auto][data-done] .lib-term-tab[aria-pressed='true']::after {
+  opacity: 1;
+  animation: lib-term-hold 5s linear forwards;
+}
+/* Held still while someone reads it, while it is scrolled away, or while the panel covers it. */
+.lib-term:is(:hover, :focus-within, :not([data-live])) .lib-term-tab::after,
+[inert] .lib-term-tab::after {
+  animation-play-state: paused;
+}
+@keyframes lib-term-hold {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.lib-term-screen {
+  /* Room for the longest run, so switching commands never moves the page. */
+  min-height: calc(19 * 1.6em + 36px);
+  margin: 0;
+  padding: 18px 20px;
+  font: 400 var(--text-xs) / 1.6 var(--mono);
+  color: var(--term-fg-2);
+  white-space: pre;
+  overflow-x: auto;
+  tab-size: 2;
+}
+.lib-term-cmd {
+  color: var(--term-fg);
+}
+.lib-term-prompt {
+  color: var(--tblock-a);
+  user-select: none;
+}
+.lib-term-caret {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  background: var(--term-fg);
+  animation: lib-caret 1s steps(1) infinite;
+}
+@keyframes lib-caret {
+  50% {
+    opacity: 0;
+  }
+}
+[data-still] .lib-term-caret {
+  animation: none;
+}
+.lib-term-line {
+  animation: lib-term-line 180ms var(--ease-out);
+}
+@keyframes lib-term-line {
+  from {
+    opacity: 0;
+  }
+}
+.lib-term [data-tone='pass'] {
+  color: var(--term-green);
+}
+.lib-term [data-tone='skip'] {
+  color: var(--term-fg-3);
+}
+.lib-term [data-tone='warn'] {
+  color: var(--term-amber);
+}
+.lib-term [data-tone='fail'] {
+  color: var(--term-red);
+}
+.lib-term [data-tone='hint'] {
+  color: oklch(0.84 0.1 225);
+}
+.lib-term [data-tone='head'] {
+  color: var(--term-fg);
+  font-weight: 600;
+}
+.lib-term [data-tone='current'] {
+  color: var(--term-fg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lib-term-line,
+  .lib-term-caret {
+    animation: none;
+  }
+}
+
+/* ---------- ships in tblock ---------- */
+
+.lib-nav-tblock {
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 8px;
+  color: var(--fg-2);
+}
+.lib-nav-tblock .lib-tb-mark {
+  font: inherit;
+  color: inherit;
+}
+.lib-nav-tblock .lib-tb-glyph {
+  margin: 0 3px 0 2px;
+}
+@media (hover: hover) {
+  .lib-nav-tblock:hover {
+    background: var(--l3);
+    color: var(--fg);
+  }
+}
+.lib-nav-tblock[aria-pressed='true'] {
+  background: var(--tblock-wash);
+  box-shadow: inset 0 0 0 1px var(--tblock-line);
+  color: var(--fg);
+}
+
+.lib-filter-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 40px;
+  padding: 10px 10px 10px 16px;
+  border-radius: 12px;
+  background: var(--tblock-wash);
+  box-shadow: inset 0 0 0 1px var(--tblock-line);
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+  scroll-margin-top: 24px;
+}
+.lib-filter-note .lib-btn {
+  margin-left: auto;
+}
+
+/* On a skill's drawing: tblock ships it. */
+.lib-draw {
+  position: relative;
+}
+.lib-draw-tblock {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 3px 8px 3px 7px;
+  border-radius: 999px;
+  background: var(--glass);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.lib-draw-tblock .lib-tb-mark {
+  gap: 6px;
+  font-size: var(--text-2xs);
+}
+.lib-draw-tblock .lib-tb-glyph {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  box-shadow: 0 0 8px -2px var(--tblock-a);
+}
+
+.lib-panel-tblock {
+  padding: 16px 16px 6px;
+  border-radius: 12px;
+  background: var(--tblock-wash);
+  box-shadow: inset 0 0 0 1px var(--tblock-line);
+}
+.lib-panel-tblock .lib-label {
+  margin-bottom: 8px;
+}
+.lib-panel-tblock p {
+  margin-bottom: 12px;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+.lib-panel-tblock code {
+  font: 400 0.92em var(--mono);
+  color: var(--fg);
+}
+.lib-panel-tblock .lib-calls {
+  margin-bottom: 10px;
 }
 
 /* Too narrow for two columns: the install side goes under the pitch. */
@@ -769,6 +1096,9 @@ a.lib-btn {
     padding: 28px 40px 32px;
     border-left: 0;
     border-top: 1px solid var(--line);
+  }
+  .lib-tblock-links {
+    margin-top: 0;
   }
 }
 @container (max-width: 40rem) {
@@ -786,6 +1116,19 @@ a.lib-btn {
   }
   .lib-tblock-side {
     padding: 20px;
+  }
+  .lib-tblock-counts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 14px;
+  }
+  .lib-tblock-cli {
+    padding: 20px 12px 12px;
+  }
+  .lib-tblock-cli-head {
+    padding: 0 8px;
+  }
+  .lib-term-lights {
+    display: none;
   }
 }
 

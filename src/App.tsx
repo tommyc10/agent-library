@@ -7,8 +7,8 @@ import { Dragon } from './components/Dragon';
 import { leave, reflow, Tile, TYPE_ICON } from './components/Items';
 import { Panel } from './components/Panel';
 import { Roll } from './components/Roll';
-import { Tblock } from './components/Tblock';
-import { chains, collections, displayName, entries, examples, getEntry, plural, search, TYPES, type Entry, type EntryType } from './lib/library';
+import { Tblock, TblockMark } from './components/Tblock';
+import { chains, collections, displayName, entries, examples, getEntry, plural, search, tblock, TYPES, type Entry, type EntryType } from './lib/library';
 import { announce, reducedMotion, transition, typing } from './lib/motion';
 
 type TypeFilter = EntryType | 'all';
@@ -56,6 +56,8 @@ export function App() {
   const [type, setType] = useState<TypeFilter>('all');
   const [collection, setCollection] = useState<string | null>(null);
   const [query, setQuery] = useState('');
+  // Only the skills that ship in tblock.
+  const [shipped, setShipped] = useState(false);
   const [open, setOpen] = useState<string | null>(readHash);
   // What the panel shows. It outlives `open` while the panel animates away, so the page
   // is live again the moment closing starts, not when the motion ends.
@@ -83,9 +85,11 @@ export function App() {
   const matched = useMemo(() => search(query, entries), [query]);
   const inCollection = (e: Entry) => !collection || e.collection === collection;
   const inType = (e: Entry) => type === 'all' || e.type === type;
-  const visible = matched.filter((e) => inCollection(e) && inType(e));
-  const forTypes = matched.filter(inCollection);
-  const forCollections = matched.filter(inType);
+  const inShipped = (e: Entry) => !shipped || e.tblock === true;
+  const visible = matched.filter((e) => inCollection(e) && inType(e) && inShipped(e));
+  const forTypes = matched.filter((e) => inCollection(e) && inShipped(e));
+  const forCollections = matched.filter((e) => inType(e) && inShipped(e));
+  const forShipped = matched.filter((e) => inCollection(e) && inType(e) && e.tblock);
 
   // Each collection shows its first row until it is opened, so the whole library fits in a
   // few screens. Picking a collection in the rail shows all of that one.
@@ -117,12 +121,16 @@ export function App() {
     );
 
   // The chains section is only there when nothing is filtered, so clear the filters, then go.
-  const goTo = (id: string) => {
+  const clearFilters = () =>
     refilter(() => {
       setQuery('');
       setType('all');
       setCollection(null);
+      setShipped(false);
     });
+
+  const goTo = (id: string) => {
+    clearFilters();
     requestAnimationFrame(() =>
       document.getElementById(id)?.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' }),
     );
@@ -185,7 +193,7 @@ export function App() {
     const furthest = bodyRef.current!.closest('main')!.getBoundingClientRect().bottom + scrollY - innerHeight;
     const top = Math.max(0, Math.min(start, furthest));
     if (scrollY > top) scrollTo({ top, behavior: 'instant' });
-  }, [collection]);
+  }, [collection, shipped]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -314,6 +322,16 @@ export function App() {
           ))}
         </nav>
 
+        <button
+          type="button"
+          className="lib-nav-item lib-nav-tblock"
+          aria-pressed={shipped}
+          onClick={() => refilter(() => setShipped((s) => !s))}
+        >
+          <TblockMark label="Ships in tblock" />
+          <Roll value={forShipped.length} />
+        </button>
+
         <h2 className="lib-rail-label">Collections</h2>
         <div className="lib-collections">
           {collections.map((c) => (
@@ -363,7 +381,20 @@ export function App() {
       <Backdrop />
 
       <main className="lib-main" inert={open !== null}>
-        <Tblock />
+        <Tblock
+          onShowShipped={() => {
+            refilter(() => {
+              setQuery('');
+              setShipped(true);
+            });
+            requestAnimationFrame(() =>
+              (document.querySelector('.lib-filter-note') ?? bodyRef.current)?.scrollIntoView({
+                block: 'start',
+                behavior: reducedMotion() ? 'auto' : 'smooth',
+              }),
+            );
+          }}
+        />
 
         <header className="lib-hero">
           <h2 className="lib-hero-title">What do you need an agent to do?</h2>
@@ -407,22 +438,24 @@ export function App() {
           </div>
         </header>
 
+        {shipped && (
+          <p className="lib-filter-note">
+            <TblockMark />
+            <span>
+              Skills that ship in tblock {tblock.version}. Anyone with tblock has these already.
+            </span>
+            <button type="button" className="lib-btn" data-variant="ghost" onClick={() => refilter(() => setShipped(false))}>
+              Show everything
+            </button>
+          </p>
+        )}
+
         <div className="lib-body" ref={bodyRef}>
           <AnimatePresence mode="popLayout" initial={false} custom={typing.now}>
           {visible.length === 0 && (
             <motion.div key="empty" className="lib-empty" layout="position" transition={reflow()} exit="out" variants={leave}>
               <p>{searching ? `No matches for “${query.trim()}”.` : 'Nothing matches these filters.'}</p>
-              <button
-                type="button"
-                className="lib-btn"
-                onClick={() =>
-                  refilter(() => {
-                    setQuery('');
-                    setType('all');
-                    setCollection(null);
-                  })
-                }
-              >
+              <button type="button" className="lib-btn" onClick={clearFilters}>
                 {searching ? 'Clear search and filters' : 'Clear filters'}
               </button>
             </motion.div>
@@ -485,7 +518,7 @@ export function App() {
         </div>
 
         {/* Not entries, so these are only there when the whole library is: no search, no filter. */}
-        {!searching && type === 'all' && !collection && chains.length > 0 && (
+        {!searching && type === 'all' && !collection && !shipped && chains.length > 0 && (
           <section id="chains" className="lib-section lib-chains-section" aria-labelledby="lib-chains-title">
             <header className="lib-section-head">
               <span className="lib-section-n">→</span>

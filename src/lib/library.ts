@@ -25,6 +25,8 @@ export interface Entry {
   /** Skills: the other markdown files that ship beside SKILL.md. */
   docs?: { name: string; body: string }[];
   preview?: PreviewKind;
+  /** Skills: tblock ships it, so anyone with tblock has it already. */
+  tblock?: boolean;
   /** Skills: the GitHub repository the author publishes it in, as `owner/repo`. */
   source?: string;
   /** Prompts: the skill this prompt calls. */
@@ -49,14 +51,25 @@ export interface Chain {
   steps: { skill: string; does: string }[];
 }
 
+/** content/tblock.json, written from the installed plugin by `npm run sync-tblock`. */
+export interface Tblock {
+  version: string;
+  counts: { playbooks: number; skills: number; principles: number; agents: number };
+  /** Every skill tblock ships, principles left out. */
+  skills: string[];
+  /** Real output of the commands the page's terminal plays, colour stripped. */
+  terminal: { command: string; output: string }[];
+}
+
 export interface LibraryData {
   collections: Collection[];
   examples: string[];
   chains: Chain[];
   entries: Entry[];
+  tblock: Tblock;
 }
 
-export const { collections, examples, chains, entries } = data;
+export const { collections, examples, chains, entries, tblock } = data;
 
 export const TYPES: { id: EntryType; label: string; plural: string }[] = [
   { id: 'skill', label: 'Skill', plural: 'Skills' },

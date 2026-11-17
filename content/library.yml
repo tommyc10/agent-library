@@ -56,6 +56,9 @@ skills:
   animation-performance: { collection: motion, preview: meter, tags: [performance, jank], source: emilkowalski/skills }
   transitions-dev: { collection: motion, preview: morph, tags: [build, css], source: Jakubantalik/transitions.dev }
   transitions-polish: { collection: motion, preview: curve, tags: [polish, timing], source: Jakubantalik/transitions.dev }
+  choreograph: { collection: motion, preview: stagger, tags: [stagger, sequence] }
+  gestures: { collection: motion, preview: phone-swipe, tags: [drag, swipe, sheets] }
+  remove-animations: { collection: motion, preview: rank, tags: [audit, calm] }
   scroll-story: { collection: stories, preview: scroll, tags: [authored, film] }
   tour: { collection: stories, preview: spotlight, tags: [authored, onboarding] }
   tour-lite: { collection: stories, preview: spotlight-lite, tags: [authored, onboarding] }
@@ -85,6 +88,8 @@ skills:
   better-ui: { collection: quality, preview: press, tags: [polish], source: jakubkrehel/skills }
   break: { collection: quality, preview: rank, tags: [stress test, edge cases], source: jakubkrehel/skills }
   break-ui: { collection: quality, preview: rank, tags: [stress test, edge cases], source: emilkowalski/skills }
+  ui-council: { collection: quality, preview: variants, tags: [review, models] }
+  learn-taste: { collection: quality, preview: lookup, tags: [taste, rules] }
   mobile-native: { collection: native, preview: phone-tabs, tags: [web], source: emilkowalski/skills }
   animate-expo: { collection: native, preview: phone-swipe, tags: [build], source: emilkowalski/skills }
   write-swift: { collection: native, preview: code, tags: [swift], source: emilkowalski/skills }
@@ -129,6 +134,21 @@ chains:
       - { skill: interface-review, does: "Find what the change made worse" }
       - { skill: better-accessibility, does: "Fix keyboard, focus and screen reader issues" }
       - { skill: better-writing, does: "Tighten the labels, errors and empty states" }
+  - id: prove-ui
+    name: Prove a UI change before it ships
+    collection: quality
+    steps:
+      - { skill: state-machine, does: "Render every state it can be in" }
+      - { skill: break-ui, does: "Feed it worst-case data and fix what breaks" }
+      - { skill: interface-review, does: "Find what the change made worse" }
+      - { skill: ui-council, does: "Have reviewers on other models test it running" }
+  - id: calm
+    name: Calm an over-animated app
+    collection: motion
+    steps:
+      - { skill: remove-animations, does: "Strip the motion it doesn't need" }
+      - { skill: choreograph, does: "Order what is left so it moves as one" }
+      - { skill: review-animations, does: "Check how it feels before it ships" }
   - id: phone
     name: Make a web app feel native
     collection: native

@@ -1,0 +1,82 @@
+{
+  "version": "0.20.0",
+  "counts": {
+    "playbooks": 18,
+    "skills": 57,
+    "principles": 24,
+    "agents": 2
+  },
+  "skills": [
+    "animate",
+    "animation-performance",
+    "animation-vocabulary",
+    "architect",
+    "automate-me",
+    "benchmark-checklist",
+    "better-accessibility",
+    "better-colors",
+    "better-interface",
+    "better-layout",
+    "better-typography",
+    "better-ui",
+    "better-writing",
+    "blast-radius",
+    "break-ui",
+    "bro",
+    "choreograph",
+    "correct",
+    "create-formal-verification-skill",
+    "create-verification-skill",
+    "emil-design-eng",
+    "figure-it-out",
+    "find-animation-opportunities",
+    "gestures",
+    "grafana-dashboard",
+    "how",
+    "improve-animations",
+    "in-your-own-words",
+    "interface-review",
+    "interrogate",
+    "learn-taste",
+    "maintain-formal-verification-skill",
+    "maintain-verification-skill",
+    "pick-ui-library",
+    "probe",
+    "prototype",
+    "reflect",
+    "remove-animations",
+    "review-animations",
+    "setup-project",
+    "setup-tblock",
+    "sharpen",
+    "shootout",
+    "show-me-your-work",
+    "state-machine",
+    "swarm",
+    "tblock-help",
+    "tblock-mode",
+    "tdd",
+    "teach",
+    "technical-writing",
+    "ticket-up",
+    "typescript-best-practices",
+    "ui-council",
+    "unslop",
+    "vercel-react-best-practices",
+    "why"
+  ],
+  "terminal": [
+    {
+      "command": "tblock doctor",
+      "output": "tblock 0.20.0 · doctor\n\n  PASS Claude Code   tblock 0.20.0 installed\n  SKIP Copilot       tblock is not installed there\n  PASS Roles         7 roles, models from 1 family, preset balanced (edited)\n  SKIP Guard         off, so pausing before a push rests on the agent alone\n                     -> tblock guard on\n  PASS Command       `tblock` runs ~/.claude/plugins/cache/tblock/tblock/0.20.0\n  SKIP GitLab CLI    glab not found\n  PASS GitHub CLI    gh is logged in\n  SKIP GitLab MCP    only visible inside an agent session; ask the agent which\n                     MCP servers it has\n\n4 passed, 4 skipped"
+    },
+    {
+      "command": "tblock preset",
+      "output": "tblock 0.20.0 · preset\n\n  With your Claude Code models\n\n     max        Hard design and risky changes: top models, high to max effort\n                thinks fable @ max   codes opus @ high   searches sonnet @ medium   reviews fable, opus, sonnet @ xhigh\n\n  *  balanced   Features and reviews (the default): top thinkers, strong workers  · current, edited\n                thinks opus @ high   codes sonnet @ medium   searches haiku @ low   reviews sonnet, opus @ high\n\n     lean       Everyday bugs and small changes: strong models, medium effort\n                thinks sonnet @ medium   codes session @ medium   searches haiku @ low   reviews sonnet, opus @ medium\n\n  -> tblock preset <name>\n    switches every role at once, in every harness you have mapped\n  -> tblock preset <name> --effort=+1\n    the same models, every role thinking one step harder (-1 for less)"
+    },
+    {
+      "command": "tblock roles",
+      "output": "tblock 0.20.0 · roles\n\nClaude Code\n  role               model    effort\n  code               sonnet   high\n  hardest            opus     high\n  judgment           opus     high\n  reviewers          sonnet   high\n                     opus     high\n  swarm workers      haiku    high\n  shootout runners   sonnet   high\n                     opus     high\n  shootout judges    sonnet   high\n                     opus     high\n\n  preset balanced (edited)  ·  tools gh  ·  guard off"
+    }
+  ]
+}

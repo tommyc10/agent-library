@@ -52,6 +52,24 @@
   /* How much a drawing darkens what is behind a spotlight. */
   --dim: rgb(0 0 0 / 0.28);
 
+  /* tblock: the beam's blues. Its mark, its filter and its hero all draw with these. */
+  --tblock-a: oklch(0.86 0.09 220);
+  --tblock-b: oklch(0.7 0.14 250);
+  --tblock-core: oklch(0.98 0.03 210);
+  --tblock: oklch(0.84 0.1 225);
+  --tblock-wash: oklch(0.84 0.1 225 / 0.1);
+  --tblock-line: oklch(0.84 0.1 225 / 0.3);
+  /* The terminal is dark in both themes: it is a terminal. */
+  --term-bg: #08090b;
+  --term-bar: #111317;
+  --term-line: rgba(255, 255, 255, 0.08);
+  --term-fg: #e6e8eb;
+  --term-fg-2: #9aa0a8;
+  --term-fg-3: #6b7178;
+  --term-green: #5fd68e;
+  --term-amber: #e7b452;
+  --term-red: #f07a7a;
+
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
@@ -119,6 +137,12 @@
   --primary: #171717;
   --primary-fg: #ffffff;
   --primary-hover: #333333;
+  --tblock-a: oklch(0.68 0.15 230);
+  --tblock-b: oklch(0.55 0.2 260);
+  --tblock-core: oklch(0.8 0.12 220);
+  --tblock: oklch(0.5 0.16 250);
+  --tblock-wash: oklch(0.55 0.16 250 / 0.09);
+  --tblock-line: oklch(0.55 0.16 250 / 0.3);
   --tone-l: 0.45;
   --tone-c: 0.17;
   --fill-l: 0.64;

@@ -37,6 +37,9 @@ function filesIn(dir: string, prefix = ''): string[] {
 /** Everything under content/ as one JSON module. The files are the library. */
 function collect() {
   const config = parse(readFileSync(join(CONTENT, 'library.yml'), 'utf8'));
+  // Written by `npm run sync-tblock`. Which skills tblock ships, and what the page says about it.
+  const tblock = JSON.parse(readFileSync(join(CONTENT, 'tblock.json'), 'utf8')) as { skills: string[] };
+  const shipped = new Set(tblock.skills);
   const entries: Record<string, unknown>[] = [];
 
   for (const name of readdirSync(join(CONTENT, 'skills')).sort()) {
@@ -60,6 +63,7 @@ function collect() {
       docs: filesIn(dir)
         .filter((f) => f.endsWith('.md') && f !== 'SKILL.md')
         .map((f) => ({ name: f, body: readFileSync(join(dir, f), 'utf8') })),
+      tblock: shipped.has(name),
       ...config.skills?.[name],
     });
   }
@@ -94,7 +98,7 @@ function collect() {
     }
   }
 
-  return { collections: config.collections, examples: config.examples ?? [], chains, entries };
+  return { collections: config.collections, examples: config.examples ?? [], chains, entries, tblock };
 }
 
 function library(): Plugin {

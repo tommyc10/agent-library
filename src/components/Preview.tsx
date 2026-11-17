@@ -1,3 +1,4 @@
+import { TblockMark } from './Tblock';
 import { promptParts, type Entry, type PreviewKind } from '../lib/library';
 
 /** What each drawing is made of: its class in previews.css, how many still parts (`i`)
@@ -81,6 +82,11 @@ export function Drawing({ entry }: { entry: Entry }) {
     return (
       <span className="lib-draw">
         <Preview kind={entry.preview} />
+        {entry.tblock && (
+          <span className="lib-draw-tblock" title="Ships in tblock">
+            <TblockMark />
+          </span>
+        )}
       </span>
     );
   }

@@ -21,6 +21,7 @@ Nothing is edited in the site. Add a file under `content/` and it appears.
 | An agent file | Add `content/agents/<name>.md`. Frontmatter: `title`, `description`, `collection`, `tags`, `path`. The body is the file. |
 | A skill | Put its folder in `content/skills/<name>/` (it needs a `SKILL.md`), then give it a collection and preview in `content/library.yml`. Add `source: owner/repo` if the author publishes it on GitHub under `skills/<name>/`: the skill's panel and tile then offer `npx skills add owner/repo --skill <name>`. Without a `source` there is no install command. |
 | Many skills | `npm run import-skills -- <folder of skills>` copies the markdown of every skill in that folder. |
+| tblock's facts | `npm run sync-tblock -- <tblock plugin folder>` rewrites `content/tblock.json` from an installed tblock: its version, its counts, the skills it ships (each gets a "Ships in tblock" mark and filter) and the real output the hero's terminal plays. Run it after a tblock update. |
 | A collection | Add it to `collections` in `content/library.yml` with a `hue` from 0 to 360. |
 | A chain | Add it to `chains` in `content/library.yml`: a `name`, a `collection` for its colour, and `steps`, each a `skill` and what it `does`. The build stops if a step names a skill that isn't there. |
 

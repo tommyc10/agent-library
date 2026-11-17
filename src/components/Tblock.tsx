@@ -1,30 +1,47 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
+import { entries, tblock } from '../lib/library';
 import { CopyButton } from './CopyButton';
+import { Terminal } from './Terminal';
 
-// All of this is from tblock's README, as of 0.4.0.
-const REPO = 'https://github.com/tommyc10/plugins/tree/main/tblock';
-const VERSION = '0.4.0';
+const REPO = 'https://github.com/tommyc10/tblock';
+const INSTALL = [
+  { id: 'claude', where: 'Claude Code', lines: ['claude plugin marketplace add tommyc10/tblock', 'claude plugin install tblock@tblock'] },
+  { id: 'copilot', where: 'Copilot CLI', lines: ['copilot plugin install tommyc10/tblock'] },
+];
 const COUNTS = [
-  { n: 10, label: 'playbooks' },
-  { n: 34, label: 'skills' },
-  { n: 24, label: 'principles' },
+  { n: tblock.counts.playbooks, label: 'playbooks' },
+  { n: tblock.counts.skills, label: 'skills' },
+  { n: tblock.counts.principles, label: 'principles' },
+  { n: tblock.counts.agents, label: 'agents' },
 ];
 const STEPS = [
   { title: 'Describe the task', body: <code>/tblock-mode fix the login redirect</code> },
-  { title: 'It picks a playbook', body: 'Bug fix, Feature, UI-UX, Refactoring, Perf and more, each a checklist the agent works through.' },
-  { title: 'It proves the change', body: 'It reproduces the problem, keeps the diff small, checks it in the running app and shows you the evidence.' },
+  {
+    title: 'It sizes it and picks a playbook',
+    body: `Small, standard or deep. Bug fix, Feature, UI-UX and ${tblock.counts.playbooks - 3} more, each a checklist the agent works through.`,
+  },
+  {
+    title: 'It proves it, then asks',
+    body: 'It checks the change in the running app and shows you the evidence. It stops before anything leaves your machine.',
+  },
 ];
-const INSTALL = [
-  { id: 'claude', where: 'Claude Code', lines: ['claude plugin marketplace add tommyc10/plugins', 'claude plugin install tblock@plugins'] },
-  { id: 'copilot', where: 'Copilot CLI', lines: ['copilot plugin install tommyc10/plugins:tblock'] },
-];
+const shipped = entries.filter((e) => e.tblock).length;
 
-/** The page's hero: what tblock is, how a task runs through it, and how to install it,
- * with a beam of light running round its edge. */
-export function Tblock() {
+/** tblock's small mark: a block lit in the beam's colours. */
+export function TblockMark({ label = 'tblock' }: { label?: string }) {
+  return (
+    <span className="lib-tb-mark">
+      <span className="lib-tb-glyph" aria-hidden />
+      {label}
+    </span>
+  );
+}
+
+/** The page's hero: what tblock is, how a task runs through it, how to install it, and its
+ * command playing for real, with a beam of light running round its edge. */
+export function Tblock({ onShowShipped }: { onShowShipped: () => void }) {
   const [tool, setTool] = useState(INSTALL[0]!);
-  const command = tool.lines.join('\n');
 
   return (
     <div className="lib-tblock-beam">
@@ -32,14 +49,16 @@ export function Tblock() {
       <section className="lib-tblock" aria-labelledby="lib-tblock-title">
         <div className="lib-tblock-main">
           <p className="lib-tblock-eyebrow">
-            <span className="lib-tblock-name">tblock</span>
+            <TblockMark />
             <span>Plugin for Claude Code and GitHub Copilot</span>
-            <span className="lib-tblock-version">v{VERSION}</span>
+            <span className="lib-tblock-version">v{tblock.version}</span>
           </p>
-          <h1 id="lib-tblock-title">Make your coding agent prove its work.</h1>
+          <h1 id="lib-tblock-title">
+            Make your coding agent <span className="lib-tblock-lit">prove its work.</span>
+          </h1>
           <p className="lib-tblock-lead">
-            tblock gives the agent a playbook for each kind of task. It names the data before it writes code, keeps changes small,
-            and doesn't call anything done until it has shown you it works.
+            tblock gives the agent a playbook for each kind of task. It sizes the work, names the data before it writes code, keeps
+            the diff small, and doesn't call anything done until it has shown you it works.
           </p>
 
           <ol className="lib-tblock-steps">
@@ -75,10 +94,10 @@ export function Tblock() {
                   </span>
                 ))}
               </pre>
-              <CopyButton text={command} title={`Copy the ${tool.where} install commands`} />
+              <CopyButton text={tool.lines.join('\n')} title={`Copy the ${tool.where} install commands`} />
             </div>
             <p className="lib-tblock-then">
-              Then run <code>/setup-tblock</code> once to pick a model for each role.
+              Then run <code>/setup-tblock</code> once to pick a preset and a model for each role.
             </p>
           </div>
 
@@ -91,10 +110,28 @@ export function Tblock() {
             ))}
           </dl>
 
-          <a className="lib-btn lib-tblock-link" href={REPO} target="_blank" rel="noreferrer">
-            Read the README
-            <ArrowUpRight size={14} />
-          </a>
+          <div className="lib-tblock-links">
+            <button type="button" className="lib-btn lib-tblock-shipped" onClick={onShowShipped}>
+              <span>
+                <strong>{shipped}</strong> skills here ship in tblock
+              </span>
+              <ArrowRight size={14} />
+            </button>
+            <a className="lib-btn" data-variant="ghost" href={REPO} target="_blank" rel="noreferrer">
+              README
+              <ArrowUpRight size={14} />
+            </a>
+          </div>
+        </div>
+
+        <div className="lib-tblock-cli">
+          <header className="lib-tblock-cli-head">
+            <h2>The tblock command</h2>
+            <p>
+              Real output from the CLI that ships with the plugin. <code>/setup-tblock</code> puts it on your path.
+            </p>
+          </header>
+          <Terminal runs={tblock.terminal} />
         </div>
       </section>
     </div>

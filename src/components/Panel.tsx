@@ -1,13 +1,14 @@
 import { ArrowUpRight, Link2, X } from 'lucide-react';
 import { motion, type MotionStyle } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { chainsWith, displayName, entries, getCollection, getEntry, hueOf, installCommand, sourceUrl, TYPES, type Entry } from '../lib/library';
+import { chainsWith, displayName, entries, getCollection, getEntry, hueOf, installCommand, sourceUrl, tblock, TYPES, type Entry } from '../lib/library';
 import { usePanelMotion } from '../lib/panel-motion';
 import { ChainCard } from './Chains';
 import { CopyButton } from './CopyButton';
 import { TYPE_ICON } from './Items';
 import { localTarget, Markdown } from './Markdown';
 import { PromptBody } from './PromptBody';
+import { TblockMark } from './Tblock';
 
 interface Props {
   entry: Entry;
@@ -83,9 +84,31 @@ function SkillBody({ entry, onOpen }: { entry: Entry; onOpen: (id: string) => vo
 
   return (
     <>
+      {entry.tblock && (
+        <section className="lib-block lib-panel-tblock">
+          <h3 className="lib-label">
+            <TblockMark label={`Ships in tblock ${tblock.version}`} />
+          </h3>
+          <p>
+            Anyone with tblock has <code>/{entry.name}</code> already.{' '}
+            {entry.source ? "tblock's copy is adapted from its author's." : 'It ships only in tblock.'} To get it with tblock:
+          </p>
+          <div className="lib-calls">
+            <div className="lib-call">
+              <span className="lib-call-where">Claude Code</span>
+              <code>claude plugin install tblock@tblock</code>
+              <CopyButton
+                text={'claude plugin marketplace add tommyc10/tblock\nclaude plugin install tblock@tblock'}
+                title="Copy the tblock install commands"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {entry.source && (
         <section className="lib-block">
-          <h3 className="lib-label">Install it</h3>
+          <h3 className="lib-label">{entry.tblock ? 'Or install it from its author' : 'Install it'}</h3>
           <div className="lib-calls">
             <div className="lib-call">
               <span className="lib-call-where">Terminal</span>
