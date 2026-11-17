@@ -1,4 +1,4 @@
-# Collections group entries on the page. `hue` is the colour angle (0 to 360) each one is drawn in.
+# Collections group entries on the page. `hue` is kept but not drawn: Imperial Ops keeps colour for status.
 collections:
   - id: motion
     name: Motion

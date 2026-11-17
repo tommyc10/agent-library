@@ -1,92 +1,76 @@
-/* Design tokens. The greys, edges, type and motion come from Imperial Ops (Midnight).
- * The one addition is colour: each collection has a hue, and `.lib-hue` turns the
- * `--hue` set on an element into the tones it draws with. */
+/* Design tokens: Imperial Ops (Midnight), from its DESIGN.md. Greys only; colour means a
+ * status and nothing else. `.lib-hue` once gave each collection a colour: it now gives
+ * every collection the same greys, so the drawings and sections keep their markup. */
 
 :root {
   --l0: #050505; /* rail: heaviest material */
   --l1: #0b0b0b; /* wells, code blocks */
   --l2: #101010; /* the page */
   --l3: #161616; /* cards */
-  --l4: #1c1c1c; /* raised controls, hover */
+  --l4: #1c1c1c; /* raised controls, selected */
   --l5: #242424; /* hover on a raised control */
   --line: rgba(255, 255, 255, 0.07);
   --line-2: rgba(255, 255, 255, 0.11);
   --line-3: rgba(255, 255, 255, 0.18);
   --fg: #ededed;
   --fg-2: #a3a3a3;
-  --fg-3: #8a8a8a;
+  --fg-3: #737373;
+  --row-name: #d6d6d6;
+  /* status: the only colour */
   --green: #45c47a;
-  /* amber: experimental. No collection has it. */
   --amber: #e0a93e;
-  --amber-wash: rgb(224 169 62 / 0.08);
-  --amber-line: rgb(224 169 62 / 0.32);
-  --glass: rgba(16, 16, 16, 0.78);
-  --glass-edge: rgba(255, 255, 255, 0.07);
-  --card-edge: rgba(255, 255, 255, 0.03);
-  /* Midnight materials: a raised frame, a lit edge, then a recessed canvas.
-   * Dark depth comes from the surface ladder; light depth adds a soft shadow. */
-  --surface-card: linear-gradient(180deg, var(--l4), var(--l3));
-  --surface-raised: var(--l4);
-  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
-  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
-  --shadow-card-light: inset 0 1px 0 var(--glass-edge), inset 0 -1px 0 oklch(0 0 0 / 0.16);
-  --shadow-well: inset 0 0 0 1px var(--line), inset 0 2px 4px oklch(0 0 0 / 0.2);
-  --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.6);
-  --shadow-lift: 0 18px 48px -12px rgb(0 0 0 / 0.55);
-  --overlay: rgba(0, 0, 0, 0.5);
-  --tint: rgba(255, 255, 255, 0.06);
-  --focus-ring: rgba(255, 255, 255, 0.45);
-  --selection: rgba(255, 255, 255, 0.22);
+  --orange: #f08a4b;
+  --red: #f0565c;
   --primary: #fafafa;
   --primary-fg: #0a0a0a;
   --primary-hover: #e2e2e2;
+  /* materials */
+  --glass: rgba(24, 24, 24, 0.78);
+  --glass-edge: rgba(255, 255, 255, 0.07);
+  --card-edge: rgba(255, 255, 255, 0.03);
+  --tint: rgba(255, 255, 255, 0.06);
+  --tint-2: rgba(255, 255, 255, 0.07);
+  --well: rgba(0, 0, 0, 0.35);
+  --well-2: rgba(0, 0, 0, 0.3);
+  --overlay: rgba(0, 0, 0, 0.45);
+  --chip: var(--l4);
+  --shadow-chip: none;
+  --focus-ring: rgba(255, 255, 255, 0.45);
+  --focus-glow: rgba(255, 255, 255, 0.05);
+  --selection: rgba(255, 255, 255, 0.22);
+  /* one grey ramp; brightest = most important */
+  --tone-1: #ededed;
+  --tone-2: #9a9a9a;
+  --tone-3: #646464;
+  --tone-4: #2b2b2b;
 
-  /* colour: one lightness and strength for every hue, so no collection shouts.
-   * `tone` is the hue as text; `fill` is the hue as a shape, which can be stronger
-   * because nothing has to be read through it. */
-  --tone-l: 0.82;
-  --tone-c: 0.12;
-  --fill-l: 0.76;
-  --fill-c: 0.16;
-  --well-tint: 20%;
+  /* elevation, as the recipes name it. Only floating things get a drop shadow. */
+  --surface-card: var(--l3);
+  --surface-raised: var(--l4);
+  --shadow-card-light: inset 0 1px 0 var(--card-edge);
+  --shadow-border: inset 0 0 0 1px var(--line);
+  --shadow-border-hover: inset 0 0 0 1px var(--line-2);
+  --shadow-well: inset 0 0 0 1px var(--line);
+  --shadow-pop: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.6);
   /* How much a drawing darkens what is behind a spotlight. */
   --dim: rgb(0 0 0 / 0.28);
-
-  /* tblock: the beam's blues. Its mark, its filter and its hero all draw with these. */
-  --tblock-a: oklch(0.86 0.09 220);
-  --tblock-b: oklch(0.7 0.14 250);
-  --tblock-core: oklch(0.98 0.03 210);
-  --tblock: oklch(0.84 0.1 225);
-  --tblock-wash: oklch(0.84 0.1 225 / 0.1);
-  --tblock-line: oklch(0.84 0.1 225 / 0.3);
-  /* The terminal is dark in both themes: it is a terminal. */
-  --term-bg: #08090b;
-  --term-bar: #111317;
-  --term-line: rgba(255, 255, 255, 0.08);
-  --term-fg: #e6e8eb;
-  --term-fg-2: #9aa0a8;
-  --term-fg-3: #6b7178;
-  --term-green: #5fd68e;
-  --term-amber: #e7b452;
-  --term-red: #f07a7a;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-  /* type: every size on the page is one of these, in rem so the reader's font size applies */
-  --text-2xs: 0.6875rem;
-  --text-xs: 0.75rem;
-  --text-sm: 0.8125rem;
-  --text-base: 0.875rem;
-  --text-md: 0.9375rem;
-  --text-lg: 1rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 2.125rem;
-  --text-4xl: 2.875rem;
+  /* type: the scale, in rem so the reader's font size applies */
+  --text-2xs: 0.6875rem; /* 11 micro */
+  --text-xs: 0.75rem; /* 12 meta */
+  --text-sm: 0.8125rem; /* 13 control */
+  --text-base: 0.875rem; /* 14 body, section */
+  --text-md: 0.9375rem; /* 15 card title */
+  --text-lg: 1.0625rem; /* 17 lead */
+  --text-xl: 1.25rem; /* 20 chapter, stat-sm */
+  --text-2xl: 1.625rem; /* 26 title, stat */
 
-  --press: 0.96;
+  --press: 0.97;
 
   --sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --mono: 'Geist Mono Variable', ui-monospace, monospace;
@@ -95,79 +79,64 @@
   scrollbar-gutter: stable;
 }
 
+/* Light: same names, new values. The rail is the darkest grey, the page is paper white,
+ * near-black is the accent, and chosen things become white chips. */
 :root[data-theme='light'] {
-  /* Frost: a cool grey page under frosted white. The page is the only opaque surface; the
-   * rail, cards and raised controls are translucent, and app.css blurs what shows through.
-   * Greys lean slightly blue. */
-  --l0: rgba(255, 255, 255, 0.6);
-  --l1: rgba(240, 242, 246, 0.75);
-  --l2: #eceef2;
-  --l3: rgba(255, 255, 255, 0.6);
-  --l4: rgba(255, 255, 255, 0.85);
-  --l5: #ffffff;
-  --line: rgba(20, 28, 48, 0.08);
-  --line-2: rgba(20, 28, 48, 0.12);
-  --line-3: rgba(20, 28, 48, 0.22);
-  --fg: #14161b;
-  --fg-2: #4a4f59;
-  --fg-3: #626875;
-  --green: #14753a;
-  --amber: #9a5b00;
-  --amber-wash: rgb(212 148 15 / 0.1);
-  --amber-line: rgb(154 91 0 / 0.36);
-  --glass: rgba(255, 255, 255, 0.6);
-  --glass-edge: rgba(255, 255, 255, 0.95);
-  --card-edge: rgba(255, 255, 255, 0.95);
-  --surface-card: rgba(255, 255, 255, 0.5);
-  --surface-raised: rgba(255, 255, 255, 0.9);
-  --shadow-border:
-    0 0 0 1px rgba(20, 28, 48, 0.07),
-    0 8px 24px -10px rgba(20, 28, 48, 0.14);
-  --shadow-border-hover:
-    0 0 0 1px rgba(20, 28, 48, 0.11),
-    0 12px 32px -12px rgba(20, 28, 48, 0.2);
-  --shadow-card-light: inset 0 0 0 1px rgba(255, 255, 255, 0.7), inset 0 1px 0 rgba(255, 255, 255, 1);
-  --shadow-well: inset 0 0 0 1px rgba(20, 28, 48, 0.06);
-  --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.16);
-  --shadow-lift: 0 18px 48px -12px rgb(0 0 0 / 0.18);
-  --overlay: rgba(0, 0, 0, 0.2);
-  --tint: rgba(20, 28, 48, 0.05);
-  --focus-ring: rgba(0, 0, 0, 0.6);
-  --selection: rgba(0, 0, 0, 0.12);
+  --l0: #efefef;
+  --l1: #f7f7f7;
+  --l2: #ffffff;
+  --l3: #fafafa;
+  --l4: #ececec;
+  --l5: #e2e2e2;
+  --line: rgba(0, 0, 0, 0.07);
+  --line-2: rgba(0, 0, 0, 0.1);
+  --line-3: rgba(0, 0, 0, 0.2);
+  --fg: #171717;
+  --fg-2: #525252;
+  --fg-3: #737373;
+  --row-name: #262626;
+  --green: #1f9d55;
+  --amber: #d4940f;
+  --orange: #c2570c;
+  --red: #d42a31;
   --primary: #171717;
   --primary-fg: #ffffff;
   --primary-hover: #333333;
-  --tblock-a: oklch(0.68 0.15 230);
-  --tblock-b: oklch(0.55 0.2 260);
-  --tblock-core: oklch(0.8 0.12 220);
-  --tblock: oklch(0.5 0.16 250);
-  --tblock-wash: oklch(0.55 0.16 250 / 0.09);
-  --tblock-line: oklch(0.55 0.16 250 / 0.3);
-  --tone-l: 0.45;
-  --tone-c: 0.17;
-  --fill-l: 0.64;
-  --fill-c: 0.19;
-  --well-tint: 12%;
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-edge: rgba(255, 255, 255, 0.9);
+  --card-edge: rgba(255, 255, 255, 0.8);
+  --tint: rgba(0, 0, 0, 0.04);
+  --tint-2: rgba(0, 0, 0, 0.05);
+  --well: rgba(255, 255, 255, 0.9);
+  --well-2: rgba(0, 0, 0, 0.025);
+  --overlay: rgba(0, 0, 0, 0.2);
+  --chip: #ffffff;
+  --shadow-chip: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --focus-ring: rgba(0, 0, 0, 0.4);
+  --focus-glow: rgba(0, 0, 0, 0.05);
+  --selection: rgba(0, 0, 0, 0.12);
+  --tone-1: #171717;
+  --tone-2: #737373;
+  --tone-3: #b0b0b0;
+  --tone-4: #dedede;
+  --shadow-pop: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --shadow-palette: 0 24px 64px rgba(0, 0, 0, 0.16);
   --dim: rgb(0 0 0 / 0.04);
   color-scheme: light;
 }
 
-/* More contrast: edges you can see and secondary text close to the main text. */
+/* More contrast: edges you can see, and fg-2 and fg-3 lifted. */
 @media (prefers-contrast: more) {
   :root {
     --line: rgba(255, 255, 255, 0.2);
-    --shadow-border: 0 0 0 1px var(--line);
-    --shadow-border-hover: 0 0 0 1px var(--line-2);
     --line-2: rgba(255, 255, 255, 0.28);
     --line-3: rgba(255, 255, 255, 0.4);
     --fg-2: #c4c4c4;
-    --fg-3: #b0b0b0;
+    --fg-3: #9a9a9a;
     --focus-ring: rgba(255, 255, 255, 0.85);
   }
   :root[data-theme='light'] {
     --line: rgba(0, 0, 0, 0.25);
-    --shadow-border: 0 0 0 1px var(--line);
-    --shadow-border-hover: 0 0 0 1px var(--line-2);
     --line-2: rgba(0, 0, 0, 0.35);
     --line-3: rgba(0, 0, 0, 0.5);
     --fg-2: #303030;
@@ -176,14 +145,13 @@
   }
 }
 
+/* Every collection draws in the same greys: `tone` for text, `fill` for shapes. */
 .lib-hue {
-  --tone: oklch(var(--tone-l) var(--tone-c) var(--hue));
-  --tone-wash: oklch(var(--tone-l) var(--tone-c) var(--hue) / 0.1);
-  --tone-line: oklch(var(--tone-l) var(--tone-c) var(--hue) / 0.3);
-  --fill: oklch(var(--fill-l) var(--fill-c) var(--hue));
-  /* A well lit from above in its collection's colour. */
-  --preview-surface:
-    radial-gradient(120% 90% at 50% 0%, color-mix(in oklch, var(--fill) var(--well-tint), var(--l1)), var(--l1) 85%);
+  --tone: var(--fg);
+  --tone-wash: var(--tint);
+  --tone-line: var(--line-2);
+  --fill: var(--tone-2);
+  --preview-surface: radial-gradient(120% 90% at 50% 0%, var(--tint), transparent 85%), var(--l1);
 }
 
 *,

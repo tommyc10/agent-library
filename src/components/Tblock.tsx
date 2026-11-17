@@ -23,7 +23,7 @@ const STEPS = [
 ];
 const shipped = entries.filter((e) => e.tblock).length;
 
-/** tblock's small mark: a block lit in the beam's colours. */
+/** tblock's small mark: a white block and a name. */
 export function TblockMark({ label = 'tblock' }: { label?: string }) {
   return (
     <span className="lib-tb-mark">
@@ -34,7 +34,7 @@ export function TblockMark({ label = 'tblock' }: { label?: string }) {
 }
 
 /** The page's hero: what tblock is, how a task runs through it, how to install it, and its
- * command playing for real, with a beam running round its edge. */
+ * command playing for real, breathing a slow grey glow. */
 export function Tblock({
   theme,
   moving,
@@ -48,7 +48,17 @@ export function Tblock({
   const [tool, setTool] = useState(INSTALL[0]!);
 
   return (
-    <BorderBeam className="lib-tblock-beam" theme={theme} active={moving}>
+    // Imperial Ops' one beam: grey, breathing in place, slow enough for a page left open all day.
+    // On light, the default brightness washes mono's greys out to white.
+    <BorderBeam
+      className="lib-tblock-beam"
+      size="pulse-inner"
+      colorVariant="mono"
+      duration={4.5}
+      theme={theme}
+      active={moving}
+      {...(theme === 'light' && { brightness: 0.45, glowSize: 1.4 })}
+    >
       <section className="lib-tblock" aria-labelledby="lib-tblock-title">
         <div className="lib-tblock-main">
           <p className="lib-tblock-eyebrow">
@@ -57,7 +67,7 @@ export function Tblock({
             <span className="lib-tblock-version">v{tblock.version}</span>
           </p>
           <h1 id="lib-tblock-title">
-            Make your coding agent <span className="lib-tblock-lit">prove its work.</span>
+            Make your coding agent prove its work.
           </h1>
           <p className="lib-tblock-lead">
             tblock gives the agent a playbook for each kind of task. It sizes the work, names the data before it writes code, keeps

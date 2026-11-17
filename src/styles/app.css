@@ -138,7 +138,7 @@
   color: var(--fg-2);
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-icon-btn:hover {
     background: var(--l4);
     color: var(--fg);
@@ -158,7 +158,7 @@
   font-weight: 500;
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-btn:hover {
     background: var(--l5);
   }
@@ -169,7 +169,7 @@
   color: var(--fg-2);
   padding: 0 10px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-btn[data-variant='ghost']:hover {
     background: var(--l4);
     color: var(--fg);
@@ -186,7 +186,7 @@ a.lib-btn {
   box-shadow: none;
   color: var(--primary-fg);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-btn[data-variant='primary']:hover {
     background: var(--primary-hover);
   }
@@ -232,7 +232,7 @@ a.lib-btn {
   white-space: nowrap;
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), opacity 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-copy:hover {
     background: var(--l4);
     color: var(--fg);
@@ -251,13 +251,13 @@ a.lib-btn {
   background: var(--primary);
   color: var(--primary-fg);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-copy[data-variant='primary']:hover {
     background: var(--primary-hover);
   }
 }
 .lib-copy[data-variant='primary'] .lib-kbd {
-  background: rgb(127 127 127 / 0.18);
+  background: color-mix(in srgb, var(--primary-fg) 18%, transparent);
   box-shadow: none;
   color: inherit;
   opacity: 0.7;
@@ -304,14 +304,14 @@ a.lib-btn {
   white-space: nowrap;
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-seg button:hover {
     color: var(--fg);
   }
 }
 .lib-seg button[aria-pressed='true'] {
-  background: var(--l4);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: var(--chip);
+  box-shadow: inset 0 0 0 1px var(--line), var(--shadow-chip);
   color: var(--fg);
 }
 
@@ -355,7 +355,7 @@ a.lib-btn {
   transform-origin: 50% 70%;
   transition: scale 300ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-mark:hover .lib-mark-head {
     scale: 1.12;
   }
@@ -385,8 +385,8 @@ a.lib-btn {
   right: 0;
   height: 2rem;
   border-radius: 7px;
-  background: var(--l4);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: var(--chip);
+  box-shadow: inset 0 0 0 1px var(--line), var(--shadow-chip);
   transform: translateY(calc(var(--at) * (2rem + 2px)));
 }
 
@@ -413,7 +413,7 @@ a.lib-btn {
 .lib-nav-item[aria-pressed='true'] {
   color: var(--fg);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-collections .lib-nav-item:hover {
     background: var(--l3);
   }
@@ -466,22 +466,23 @@ a.lib-btn {
 
 .lib-hero {
   position: relative;
-  padding: 72px 0 12px;
+  padding: 56px 0 12px;
 }
 
 .lib-hero-title {
-  max-width: 38.75rem;
-  font-size: var(--text-3xl);
+  max-width: 47.5rem;
+  font-size: var(--text-2xl);
   font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.042em;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
 .lib-hero-sub {
-  margin-top: 16px;
+  margin-top: 8px;
   font-size: var(--text-lg);
-  line-height: 1.6;
+  line-height: 1.62;
+  letter-spacing: -0.005em;
   color: var(--fg-2);
 }
 .lib-hero-sub .lib-roll {
@@ -496,17 +497,16 @@ a.lib-btn {
 .lib-tblock-beam {
   container-type: inline-size;
   margin-top: 32px;
-  border-radius: 18px;
-  box-shadow: var(--shadow-border);
+  border-radius: 14px;
 }
 
 .lib-tblock {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem);
-  border-radius: 18px;
+  border-radius: 14px;
   background: var(--surface-card);
-  box-shadow: var(--shadow-card-light);
+  box-shadow: var(--shadow-card-light), inset 0 0 0 1px var(--line-2);
 }
 
 .lib-tblock-main {
@@ -527,10 +527,10 @@ a.lib-btn {
 .lib-tblock-main h1 {
   max-width: 22ch;
   margin-top: 14px;
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.042em;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 .lib-tblock-lead {
@@ -615,7 +615,7 @@ a.lib-btn {
   color: var(--fg-3);
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-tblock-tabs button:hover {
     color: var(--fg);
   }
@@ -686,36 +686,19 @@ a.lib-btn {
   gap: 6px;
   margin-top: auto;
 }
-.lib-tblock-shipped {
-  background: var(--tblock-wash);
-  box-shadow: inset 0 0 0 1px var(--tblock-line);
-  color: var(--fg);
-}
 .lib-tblock-shipped strong {
-  color: var(--tblock);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 .lib-tblock-shipped .lucide {
-  color: var(--tblock);
-  transition: translate 200ms var(--ease-out);
+  color: var(--fg-3);
+  transition: translate 160ms var(--ease-out);
 }
-@media (hover: hover) {
-  .lib-tblock-shipped:hover {
-    background: var(--tblock-wash);
-    box-shadow: inset 0 0 0 1px var(--tblock);
-  }
+@media (hover: hover) and (pointer: fine) {
   .lib-tblock-shipped:hover .lucide {
+    color: var(--fg);
     translate: 2px 0;
   }
-}
-
-/* The headline's last words, lit in the beam's colours. */
-.lib-tblock-lit {
-  background: linear-gradient(100deg, var(--fg) 0%, var(--tblock-a) 45%, var(--tblock-b) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 /* tblock's mark: a small lit block and a name. */
@@ -729,11 +712,11 @@ a.lib-btn {
 }
 .lib-tb-glyph {
   flex: none;
-  width: 9px;
-  height: 9px;
-  border-radius: 2.5px;
-  background: linear-gradient(135deg, var(--tblock-core), var(--tblock-a) 40%, var(--tblock-b));
-  box-shadow: 0 0 0 3px var(--tblock-wash), 0 0 10px -2px var(--tblock-a);
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--primary);
+  box-shadow: 0 0 0 3px var(--tint);
 }
 .lib-tblock-eyebrow > .lib-tb-mark {
   padding: 4px 9px 4px 8px;
@@ -767,13 +750,10 @@ a.lib-btn {
 }
 
 .lib-term {
-  border-radius: 12px;
-  background: var(--term-bg);
-  box-shadow:
-    0 0 0 1px var(--term-line),
-    0 24px 48px -24px rgb(0 0 0 / 0.5),
-    0 0 0 6px color-mix(in oklch, var(--tblock-b) 6%, transparent);
-  color: var(--term-fg);
+  border-radius: 10px;
+  background: var(--l1);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--fg);
   overflow: hidden;
 }
 .lib-term-bar {
@@ -782,18 +762,10 @@ a.lib-btn {
   gap: 14px;
   min-height: 2.5rem;
   padding: 0 6px 0 14px;
-  background: var(--term-bar);
-  border-bottom: 1px solid var(--term-line);
+  border-bottom: 1px solid var(--line);
 }
 .lib-term-bar .lib-copy {
   margin-left: auto;
-  color: var(--term-fg-2);
-}
-@media (hover: hover) {
-  .lib-term-bar .lib-copy:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--term-fg);
-  }
 }
 .lib-term-lights {
   display: flex;
@@ -803,8 +775,9 @@ a.lib-btn {
 .lib-term-lights span {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: var(--tint);
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 .lib-term-tabs {
   display: flex;
@@ -820,17 +793,19 @@ a.lib-btn {
   padding: 0 10px;
   border-radius: 7px;
   font: 400 var(--text-xs) / 1 var(--mono);
-  color: var(--term-fg-3);
+  color: var(--fg-3);
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-term-tab:hover {
-    color: var(--term-fg);
+    background: var(--tint);
+    color: var(--fg);
   }
 }
 .lib-term-tab[aria-pressed='true'] {
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--term-fg);
+  background: var(--chip);
+  box-shadow: inset 0 0 0 1px var(--line), var(--shadow-chip);
+  color: var(--fg);
 }
 /* While a command holds, a hairline under its tab fills; when it is full the next plays. */
 .lib-term-tab::after {
@@ -839,7 +814,7 @@ a.lib-btn {
   inset: auto 10px 3px;
   height: 1px;
   border-radius: 1px;
-  background: linear-gradient(90deg, var(--tblock-b), var(--tblock-a));
+  background: var(--fg-3);
   transform: scaleX(0);
   transform-origin: left;
   opacity: 0;
@@ -861,23 +836,25 @@ a.lib-btn {
 
 .lib-term-screen {
   /* A fixed height, so switching commands never moves the page. */
-  height: calc(12 * 1.45em + 28px);
+  height: calc(12 * 1.6em + 28px);
   margin: 0;
   padding: 14px 18px;
-  font: 400 var(--text-2xs) / 1.45 var(--mono);
-  color: var(--term-fg-2);
+  font: 400 var(--text-xs) / 1.6 var(--mono);
+  color: var(--fg-2);
   white-space: pre;
   overflow: auto;
   overscroll-behavior: contain;
+  /* A scrolling list fades at its edges instead of cutting a line in half. */
+  mask-image: linear-gradient(transparent, #000 12px, #000 calc(100% - 16px), transparent);
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: var(--line-3) transparent;
   tab-size: 2;
 }
 .lib-term-cmd {
-  color: var(--term-fg);
+  color: var(--fg);
 }
 .lib-term-prompt {
-  color: var(--tblock-a);
+  color: var(--fg-3);
   user-select: none;
 }
 .lib-term-caret {
@@ -885,7 +862,7 @@ a.lib-btn {
   width: 0.6em;
   height: 1.15em;
   vertical-align: -0.2em;
-  background: var(--term-fg);
+  background: var(--fg);
   animation: lib-caret 1s steps(1) infinite;
 }
 @keyframes lib-caret {
@@ -904,27 +881,26 @@ a.lib-btn {
     opacity: 0;
   }
 }
+/* Status is the only colour: a check that passed, waits, warns or failed. */
 .lib-term [data-tone='pass'] {
-  color: var(--term-green);
+  color: var(--green);
 }
 .lib-term [data-tone='skip'] {
-  color: var(--term-fg-3);
+  color: var(--fg-3);
 }
 .lib-term [data-tone='warn'] {
-  color: var(--term-amber);
+  color: var(--orange);
 }
 .lib-term [data-tone='fail'] {
-  color: var(--term-red);
+  color: var(--red);
 }
-.lib-term [data-tone='hint'] {
-  color: oklch(0.84 0.1 225);
+.lib-term [data-tone='hint'],
+.lib-term [data-tone='current'] {
+  color: var(--fg);
 }
 .lib-term [data-tone='head'] {
-  color: var(--term-fg);
+  color: var(--fg);
   font-weight: 600;
-}
-.lib-term [data-tone='current'] {
-  color: var(--term-fg);
 }
 @media (prefers-reduced-motion: reduce) {
   .lib-term-line,
@@ -947,15 +923,15 @@ a.lib-btn {
 .lib-nav-tblock .lib-tb-glyph {
   margin: 0 3px 0 2px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-nav-tblock:hover {
     background: var(--l3);
     color: var(--fg);
   }
 }
 .lib-nav-tblock[aria-pressed='true'] {
-  background: var(--tblock-wash);
-  box-shadow: inset 0 0 0 1px var(--tblock-line);
+  background: var(--chip);
+  box-shadow: inset 0 0 0 1px var(--line), var(--shadow-chip);
   color: var(--fg);
 }
 
@@ -967,8 +943,8 @@ a.lib-btn {
   margin-top: 40px;
   padding: 10px 10px 10px 16px;
   border-radius: 12px;
-  background: var(--tblock-wash);
-  box-shadow: inset 0 0 0 1px var(--tblock-line);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-card-light), var(--shadow-border);
   font-size: var(--text-sm);
   color: var(--fg-2);
   scroll-margin-top: 24px;
@@ -985,29 +961,29 @@ a.lib-btn {
   position: absolute;
   top: 12px;
   left: 12px;
-  padding: 3px 8px 3px 7px;
+  display: inline-flex;
+  align-items: center;
+  height: 1.25rem;
+  padding: 0 8px 0 7px;
   border-radius: 999px;
-  background: var(--glass);
-  box-shadow: inset 0 0 0 1px var(--line-2);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: var(--l4);
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 .lib-draw-tblock .lib-tb-mark {
   gap: 6px;
   font-size: var(--text-2xs);
 }
 .lib-draw-tblock .lib-tb-glyph {
-  width: 7px;
-  height: 7px;
-  border-radius: 2px;
-  box-shadow: 0 0 8px -2px var(--tblock-a);
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
 }
 
 .lib-panel-tblock {
   padding: 16px 16px 6px;
   border-radius: 12px;
-  background: var(--tblock-wash);
-  box-shadow: inset 0 0 0 1px var(--tblock-line);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-card-light), var(--shadow-border);
 }
 .lib-panel-tblock .lib-label {
   margin-bottom: 8px;
@@ -1046,7 +1022,7 @@ a.lib-btn {
     padding: 26px 20px 24px;
   }
   .lib-tblock-main h1 {
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
   }
   .lib-tblock-eyebrow > :nth-child(2) {
     display: none;
@@ -1078,31 +1054,19 @@ a.lib-btn {
   align-items: center;
   gap: 12px;
   max-width: 45rem;
-  min-height: 3.375rem;
-  margin-top: 30px;
+  min-height: 3.25rem;
+  margin-top: 24px;
   padding: 0 14px 0 18px;
   border-radius: 14px;
-  background: color-mix(in srgb, var(--l3) 82%, transparent);
-  backdrop-filter: blur(20px) saturate(1.2);
-  box-shadow: inset 0 1px 0 var(--glass-edge), inset 0 0 0 1px var(--line-2);
+  background: var(--l3);
+  box-shadow: inset 0 0 0 1px var(--line);
   color: var(--fg-3);
   cursor: text;
-  transition: background-color 200ms ease-out, box-shadow 200ms ease-out, translate 200ms ease-out;
+  transition: box-shadow 150ms var(--ease-out);
 }
-/* On focus the field rises off the page: it turns solid, takes a deep shadow and a ring in
- * the focus colour, and the examples under it step back so it is the one thing lit. */
+/* Focus: a line-3 ring and a 3px glow, and the examples under it step back. */
 .lib-search:focus-within {
-  background: var(--surface-raised);
-  box-shadow:
-    inset 0 1px 0 var(--glass-edge),
-    inset 0 0 0 1px var(--focus-ring),
-    var(--shadow-lift),
-    0 0 0 1px var(--line-2);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .lib-search:focus-within {
-    translate: 0 -2px;
-  }
+  box-shadow: inset 0 0 0 1px var(--line-3), 0 0 0 3px var(--focus-glow);
 }
 .lib-examples {
   transition: opacity 200ms ease-out;
@@ -1118,8 +1082,7 @@ a.lib-btn {
   outline: 0;
   background: none;
   color: var(--fg);
-  font: 400 var(--text-lg)/1 var(--sans);
-  letter-spacing: -0.005em;
+  font: 400 var(--text-md)/1 var(--sans);
 }
 .lib-search input::placeholder {
   color: var(--fg-3);
@@ -1138,15 +1101,15 @@ a.lib-btn {
   margin-right: 4px;
 }
 .lib-example {
-  min-height: 1.625rem;
-  padding: 3px 10px;
-  border-radius: 13px;
+  min-height: 1.5rem;
+  padding: 2px 10px;
+  border-radius: 999px;
   box-shadow: inset 0 0 0 1px var(--line);
   font-size: var(--text-xs);
   color: var(--fg-2);
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-example:hover {
     background: var(--l4);
     color: var(--fg);
@@ -1181,8 +1144,8 @@ a.lib-btn {
   color: var(--fg-3);
 }
 .lib-section-n {
-  font: 500 var(--text-xs)/1 var(--mono);
-  color: var(--tone);
+  font: 400 var(--text-xs)/1 var(--mono);
+  color: var(--fg-3);
 }
 .lib-section-count {
   margin-left: auto;
@@ -1195,10 +1158,10 @@ a.lib-btn {
   align-items: center;
   align-self: center;
   gap: 5px;
-  min-height: 1.625rem;
+  min-height: 1.5rem;
   margin-left: auto;
   padding: 0 8px 0 10px;
-  border-radius: 13px;
+  border-radius: 999px;
   box-shadow: inset 0 0 0 1px var(--line-2);
   font-size: var(--text-xs);
   font-weight: 500;
@@ -1206,7 +1169,7 @@ a.lib-btn {
   white-space: nowrap;
   transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-more:hover {
     background: var(--l4);
     color: var(--fg);
@@ -1238,7 +1201,7 @@ a.lib-btn {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  border-radius: 14px;
+  border-radius: 12px;
 }
 /* The name is the button, stretched over the whole tile; the ring is drawn on the tile. */
 .lib-tile:has(.lib-tile-name:focus-visible) {
@@ -1260,9 +1223,9 @@ a.lib-btn {
 .lib-draw {
   display: block;
   height: 196px;
-  padding: 5px;
+  padding: 4px;
   border: 1px solid transparent;
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--surface-card);
   box-shadow: var(--shadow-card-light), var(--shadow-border);
   overflow: hidden;
@@ -1271,7 +1234,7 @@ a.lib-btn {
 .lib-draw .lib-pv,
 .lib-draw-text {
   height: 100%;
-  border-radius: 8px; /* 14px outer = 8px inner + 5px padding + 1px border */
+  border-radius: 7px; /* 12px outer = 7px inner + 4px padding + 1px border */
 }
 .lib-draw .lib-pv > * {
   scale: 1.7;
@@ -1305,7 +1268,7 @@ a.lib-btn {
   color: var(--tone);
 }
 /* Light the outer frame without flattening the inset canvas or fading its edge. */
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-tile:hover .lib-draw {
     box-shadow: var(--shadow-card-light), var(--shadow-border-hover);
   }
@@ -1342,14 +1305,12 @@ a.lib-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font: 500 var(--text-2xs) / 1 var(--mono);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font: 500 var(--text-2xs) / 1 var(--sans);
   color: var(--fg-3);
   white-space: nowrap;
 }
 .lib-kind svg {
-  color: var(--tone);
+  color: var(--fg-3);
 }
 .lib-tile-desc {
   margin: 5px 4px 0;
@@ -1371,7 +1332,7 @@ a.lib-btn {
   background: var(--surface-raised);
   box-shadow: var(--shadow-card-light), var(--shadow-border);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-tile > .lib-copy:hover {
     background: var(--l5);
   }
@@ -1416,7 +1377,7 @@ a.lib-btn {
 .lib-chain {
   padding: 4px;
   border: 1px solid transparent;
-  border-radius: 13px; /* 8px inner + 4px padding + 1px border */
+  border-radius: 12px; /* 7px inner + 4px padding + 1px border */
   background: var(--surface-card);
   box-shadow: var(--shadow-card-light), var(--shadow-border);
 }
@@ -1453,13 +1414,13 @@ a.lib-btn {
   width: 100%;
   min-height: 2.375rem;
   padding: 4px 10px;
-  border-radius: 8px;
+  border-radius: 7px;
   font-size: var(--text-sm);
   text-align: left;
   transition: background-color 120ms var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-chain-step:not([aria-current]):hover {
     background: var(--l4);
   }
@@ -1664,7 +1625,7 @@ a.lib-btn {
   gap: 1px;
   padding: 4px;
   border: 1px solid transparent;
-  border-radius: 13px; /* 8px inner + 4px padding + 1px border */
+  border-radius: 12px; /* 7px inner + 4px padding + 1px border */
   background: var(--surface-card);
   box-shadow: var(--shadow-card-light), var(--shadow-border);
 }
@@ -1675,11 +1636,11 @@ a.lib-btn {
   align-items: center;
   min-height: 2.375rem;
   padding: 0 10px;
-  border-radius: 8px;
+  border-radius: 7px;
   font-size: var(--text-sm);
   transition: background-color 120ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-link-row:hover {
     background: var(--l4);
   }
@@ -1733,7 +1694,7 @@ a.lib-btn {
 }
 .lib-blank {
   padding: 2px 4px;
-  border-radius: 5px;
+  border-radius: 4px;
   background: var(--tone-wash);
   color: var(--tone);
   /* Not colour alone: the underline marks a blank in every theme and in forced colours. */
@@ -1749,7 +1710,7 @@ a.lib-btn {
   content: attr(aria-label);
   opacity: 0.6;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-blank:hover {
     box-shadow: 0 0 0 1px var(--tone-line);
   }
@@ -1911,7 +1872,7 @@ a.lib-btn {
   color: var(--fg-2);
   transition: opacity 150ms var(--ease-out), color 150ms var(--ease-out);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-code-copy {
     opacity: 0;
   }
@@ -1920,7 +1881,7 @@ a.lib-btn {
 .lib-code-copy[data-copied] {
   opacity: 1;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-code-copy:hover {
     color: var(--fg);
   }
@@ -1983,7 +1944,12 @@ a.lib-btn {
     flex: none;
   }
   .lib-nav-item[aria-current] {
-    background: var(--l4);
+    background: var(--chip);
+    box-shadow: inset 0 0 0 1px var(--line), var(--shadow-chip);
+  }
+  .lib-nav-tblock {
+    align-self: flex-start;
+    gap: 10px;
   }
   .lib-collections {
     margin-top: 6px;
@@ -2081,24 +2047,6 @@ a.lib-btn {
   }
 }
 
-/* Light theme, frosted: these surfaces blur the page behind them, lightly enough that its
- * dot grid still shows through as a texture. Their colours are in theme.css. */
-:root[data-theme='light'] :is(.lib-draw, .lib-rail, .lib-tblock, .lib-search) {
-  -webkit-backdrop-filter: blur(2px) saturate(1.2);
-  backdrop-filter: blur(2px) saturate(1.2);
-}
-/* The panel stays solid: what it holds is long text, and the page must not show through. */
-:root[data-theme='light'] .lib-panel {
-  background: #f7f8fa;
-}
-:root[data-theme='light'] :is(.lib-pv, .lib-draw-text) {
-  background-color: rgba(246, 247, 250, 0.88);
-}
-/* Stronger dots, so there is something behind the glass. */
-:root[data-theme='light'] .lib-backdrop {
-  background-image: radial-gradient(circle at center, rgba(20, 28, 48, 0.2) 0.8px, transparent 1.4px);
-}
-
 /* More contrast: nothing behind the text. */
 @media (prefers-contrast: more) {
   .lib-backdrop {
@@ -2106,23 +2054,8 @@ a.lib-btn {
   }
 }
 
-/* Less transparency, or more contrast: the glass surfaces turn solid. */
+/* Less transparency, or more contrast: glass turns solid. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  :root[data-theme='light'] {
-    --l0: #f7f8fa;
-    --l1: #f1f3f6;
-    --l3: #fbfbfc;
-    --l4: #f7f8fa;
-    --surface-card: #fbfbfc;
-    --surface-raised: #ffffff;
-  }
-  :root[data-theme='light'] .lib-panel {
-    background: #f8f9fb;
-  }
-  .lib-search {
-    background: var(--l3);
-    backdrop-filter: none;
-  }
   .lib-panel-head {
     background: var(--l2);
     backdrop-filter: none;
@@ -2143,7 +2076,7 @@ a.lib-btn {
   -webkit-tap-highlight-color: transparent;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .lib-nav-item:hover { color: var(--fg); }
   .lib-code:hover .lib-code-copy { opacity: 1; }
 }
