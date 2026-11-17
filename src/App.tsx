@@ -68,6 +68,13 @@ export function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('library-theme') ?? 'dark');
   // The skill drawings loop while on screen; this stops them, and the choice is kept.
   const [still, setStill] = useState(() => localStorage.getItem('library-still') === 'true');
+  const [reduced, setReduced] = useState(reducedMotion);
+  useEffect(() => {
+    const query = matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduced(query.matches);
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
   const searchRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   // The collections opened out to show everything in them. The rest show one row.
@@ -382,6 +389,8 @@ export function App() {
 
       <main className="lib-main" inert={open !== null}>
         <Tblock
+          theme={theme === 'light' ? 'light' : 'dark'}
+          moving={!still && !reduced}
           onShowShipped={() => {
             refilter(() => {
               setQuery('');

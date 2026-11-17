@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { reducedMotion } from '../lib/motion';
 import { CopyButton } from './CopyButton';
 
@@ -75,6 +75,12 @@ export function Terminal({ runs }: { runs: Run[] }) {
   const shown = elapsed >= typeEnd + THINK_MS ? Math.min(lines.length, Math.floor((elapsed - typeEnd - THINK_MS) / LINE_MS) + 1) : 0;
   const done = elapsed >= total;
 
+  // The screen is shorter than most runs, so it follows the newest line like a real terminal.
+  const screen = useRef<HTMLPreElement>(null);
+  useLayoutEffect(() => {
+    if (screen.current) screen.current.scrollTop = screen.current.scrollHeight;
+  }, [at, shown, done]);
+
   const pick = (i: number) => {
     setAuto(false);
     setAt(i);
@@ -107,7 +113,7 @@ export function Terminal({ runs }: { runs: Run[] }) {
         </div>
         <CopyButton text={run.command} title={`Copy ${run.command}`} />
       </div>
-      <pre className="lib-term-screen" aria-hidden>
+      <pre className="lib-term-screen" ref={screen} aria-hidden>
         <span className="lib-term-cmd">
           <span className="lib-term-prompt">$ </span>
           {run.command.slice(0, typed)}

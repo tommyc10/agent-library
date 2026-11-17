@@ -1,3 +1,4 @@
+import { BorderBeam } from 'border-beam';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
 import { entries, tblock } from '../lib/library';
@@ -17,14 +18,8 @@ const COUNTS = [
 ];
 const STEPS = [
   { title: 'Describe the task', body: <code>/tblock-mode fix the login redirect</code> },
-  {
-    title: 'It sizes it and picks a playbook',
-    body: `Small, standard or deep. Bug fix, Feature, UI-UX and ${tblock.counts.playbooks - 3} more, each a checklist the agent works through.`,
-  },
-  {
-    title: 'It proves it, then asks',
-    body: 'It checks the change in the running app and shows you the evidence. It stops before anything leaves your machine.',
-  },
+  { title: 'It picks a playbook', body: `Sized small, standard or deep, from ${tblock.counts.playbooks} checklists.` },
+  { title: 'It proves it, then asks', body: 'Evidence from the running app. Nothing leaves your machine unasked.' },
 ];
 const shipped = entries.filter((e) => e.tblock).length;
 
@@ -39,13 +34,21 @@ export function TblockMark({ label = 'tblock' }: { label?: string }) {
 }
 
 /** The page's hero: what tblock is, how a task runs through it, how to install it, and its
- * command playing for real, with a beam of light running round its edge. */
-export function Tblock({ onShowShipped }: { onShowShipped: () => void }) {
+ * command playing for real, with a beam running round its edge. */
+export function Tblock({
+  theme,
+  moving,
+  onShowShipped,
+}: {
+  theme: 'dark' | 'light';
+  /** False under reduced motion or when paused from the rail: the beam is off. */
+  moving: boolean;
+  onShowShipped: () => void;
+}) {
   const [tool, setTool] = useState(INSTALL[0]!);
 
   return (
-    <div className="lib-tblock-beam">
-      <span className="lib-tblock-glow" aria-hidden />
+    <BorderBeam className="lib-tblock-beam" theme={theme} active={moving}>
       <section className="lib-tblock" aria-labelledby="lib-tblock-title">
         <div className="lib-tblock-main">
           <p className="lib-tblock-eyebrow">
@@ -134,6 +137,6 @@ export function Tblock({ onShowShipped }: { onShowShipped: () => void }) {
           <Terminal runs={tblock.terminal} />
         </div>
       </section>
-    </div>
+    </BorderBeam>
   );
 }
